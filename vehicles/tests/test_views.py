@@ -329,7 +329,7 @@ class PortariaViewTest(TestCase):
     def test_pagina_portaria_lista_viagens_do_dia(self):
         response = self.client.get(reverse('portaria_list'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Portaria')
+        self.assertIn(b'Portaria', response.content)
 
     def test_registrar_saida(self):
         response = self.client.post(

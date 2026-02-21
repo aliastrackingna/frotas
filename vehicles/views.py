@@ -417,9 +417,10 @@ def portaria_list(request):
         except RegistroPortaria.DoesNotExist:
             registros[viagem.id] = None
     
+    viagens_registros = [(v, registros.get(v.id)) for v in viagens]
+    
     return render(request, 'portaria_list.html', {
-        'viagens': viagens,
-        'registros': registros,
+        'viagens_registros': viagens_registros,
         'data_atual': hoje.strftime('%d/%m/%Y')
     })
 

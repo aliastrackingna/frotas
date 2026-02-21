@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load portaria_tags %}
 
 {% block title %}Portaria - Viagens do Dia{% endblock %}
 
@@ -24,14 +23,13 @@
         </tr>
     </thead>
     <tbody>
-        {% for viagem in viagens %}
-        {% get_registro registros viagem.id as registro %}
+        {% for viagem, registro in viagens_registros %}
         <tr>
             <td>{{ viagem.data_viagem|time:"H:i" }} - {{ viagem.data_fim_prevista|time:"H:i" }}</td>
-            <td>{% if registro.km_saida %}{{ registro.km_saida }}{% else %}--{% endif %}</td>
-            <td>{% if registro.horario_saida %}{{ registro.horario_saida|time:"H:i" }}{% else %}--{% endif %}</td>
-            <td>{% if registro.km_chegada %}{{ registro.km_chegada }}{% else %}--{% endif %}</td>
-            <td>{% if registro.horario_chegada %}{{ registro.horario_chegada|time:"H:i" }}{% else %}--{% endif %}</td>
+            <td>{% if registro %}{{ registro.km_saida|default:"--" }}{% else %}--{% endif %}</td>
+            <td>{% if registro and registro.horario_saida %}{{ registro.horario_saida|time:"H:i" }}{% else %}--{% endif %}</td>
+            <td>{% if registro %}{{ registro.km_chegada|default:"--" }}{% else %}--{% endif %}</td>
+            <td>{% if registro and registro.horario_chegada %}{{ registro.horario_chegada|time:"H:i" }}{% else %}--{% endif %}</td>
             <td>{% if viagem.veiculo %}{{ viagem.veiculo.placa }} - {{ viagem.veiculo.marca }}{% else %}--{% endif %}</td>
             <td>{% if viagem.motorista %}{{ viagem.motorista.nome }}{% else %}--{% endif %}</td>
             <td>
@@ -45,7 +43,8 @@
                 <a href="{% url 'portaria_registrar_chegada' viagem.id %}" class="btn btn-success">Registrar Chegada</a>
                 {% else %}
                 <span class="status-concluida">Concluído</span>
-        {% endif %}</td>
+                {% endif %}
+            </td>
         </tr>
         {% empty %}
         <tr>
