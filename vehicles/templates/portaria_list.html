@@ -15,12 +15,12 @@
         <div class="stat-label">Viagens Hoje</div>
     </div>
     <div class="stat-card">
-        <div class="stat-icon">🚀</div>
+        <div class="stat-icon">↗️</div>
         <div class="stat-value">{{ stats.saidas }}</div>
         <div class="stat-label">Saídas Registradas</div>
     </div>
     <div class="stat-card">
-        <div class="stat-icon">✅</div>
+        <div class="stat-icon">📥</div>
         <div class="stat-value">{{ stats.chegadas }}</div>
         <div class="stat-label">Chegadas</div>
     </div>
@@ -41,17 +41,16 @@
     <div class="trip-cards">
         {% for viagem, registro in pendentes %}
         <div class="trip-card trip-card-pendente">
-            <div class="trip-header">
-                <div class="trip-dates">
-                    {% if viagem.data_viagem.date == viagem.data_fim_prevista.date %}
-                        {{ viagem.data_viagem|date:"d/m" }}
-                    {% else %}
-                        {{ viagem.data_viagem|date:"d/m" }} - {{ viagem.data_fim_prevista|date:"d/m" }}
-                    {% endif %}
+            <div class="trip-header" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+                <div style="font-size: 18px; font-weight: 700; color: #1e293b; margin: 0;">
+                    {% if viagem.veiculo %}{{ viagem.veiculo.marca }} {{ viagem.veiculo.placa }}{% else %}Sem veículo{% endif %}
                 </div>
-                <div class="trip-status">
+                <div class="trip-dates" style="font-size: 13px; color: #64748b;">
+                    {{ viagem.data_viagem|date:"d/m | H:i " }} - {{ viagem.data_fim_prevista|date:" d/m | H:i" }}
+                </div>
+                <div class="trip-status" style="margin-top: 4px;">
                     {% if registro and registro.horario_saida %}
-                        🚀 Em Andamento
+                        ↗️ Em Andamento
                     {% else %}
                         ⏳ Aguardando
                     {% endif %}
@@ -59,10 +58,6 @@
             </div>
             
             <div class="trip-body">
-                <div class="trip-info">
-                    <span class="info-icon">🚐</span>
-                    <span>{% if viagem.veiculo %}{{ viagem.veiculo.marca }} {{ viagem.veiculo.placa }} ({{ viagem.veiculo.quantidade_passageiros }} lug.){% else %}Sem veículo{% endif %}</span>
-                </div>
                 <div class="trip-info">
                     <span class="info-icon">👤</span>
                     <span>{% if viagem.motorista %}{{ viagem.motorista.nome }} (CNH {{ viagem.motorista.tipo_carteira }}){% else %}Sem motorista{% endif %}</span>
@@ -76,30 +71,37 @@
                     <span>{{ viagem.quantidade_passageiros }} passageiros</span>
                 </div>
             </div>
-             <div class="trip-details">
+             
+            <div class="trip-details">
                 <div class="detail-item">
-                    <span class="detail-label">Saída:</span>
-                    <span>{{ registro.horario_saida|date:"d/m H:i" }}</span>
+                    <span class="detail-label">↗️ Saída:</span>
+                    <span>{% if registro.horario_saida %}{{ registro.horario_saida|date:"d/m H:i" }}{% else %}--{% endif %}</span>
                 </div>
                 <div class="detail-item">
-                    <span class="detail-label">Chegada:</span>
-                    <span>{{ registro.horario_chegada|date:"d/m H:i" }}</span>
+                    <span class="detail-label">📥 Chegada:</span>
+                    <span>{% if registro.horario_chegada %}{{ registro.horario_chegada|date:"d/m H:i" }}{% else %}--{% endif %}</span>
                 </div>
-                <div class="detail-item">
-                    <span class="detail-label">KM:</span>
-                    <span>{% if registro.km_saida %}{{ registro.km_saida }}{% else %}--{% endif %} → {% if registro.km_chegada %}{{ registro.km_chegada }}{% else %}--{% endif %}</span>
+                <div class="detail-item" style="flex-direction: column; gap: 4px;">
+                    <div>
+                        <span class="detail-label">Km Saída: </span>
+                        <span class="km-value">{% if registro.km_saida %}{{ registro.km_saida|floatformat:"0" }}{% else %}--{% endif %}</span>
+                    </div>
+                    <div>
+                        <span class="detail-label">Km Chegada: </span>
+                        <span class="km-value">{% if registro.km_chegada %}{{ registro.km_chegada|floatformat:"0" }}{% else %}--{% endif %}</span>
+                    </div>
                 </div>
             </div>
             
             <div class="trip-actions">
                 {% if not registro or not registro.horario_saida %}
-                <a href="{% url 'portaria_registrar_saida' viagem.id %}" class="btn btn-warning">🚀 Registrar Saída</a>
+                <a href="{% url 'portaria_registrar_saida' viagem.id %}" class="btn btn-warning">↗️ Registrar Saída</a>
                 {% endif %}
                 {% if registro and registro.horario_saida and not registro.horario_chegada %}
-                <a href="{% url 'portaria_registrar_chegada' viagem.id %}" class="btn btn-success">✅ Registrar Chegada</a>
+                <a href="{% url 'portaria_registrar_chegada' viagem.id %}" class="btn btn-success">📥 Registrar Chegada</a>
                 {% endif %}
                 {% if registro and registro.horario_chegada %}
-                <span class="trip-concluido">✅ Concluído em {{ registro.horario_chegada|date:"d/m H:i" }}</span>
+                <span class="trip-concluido">🏁 Finalizado em {{ registro.horario_chegada|date:"d/m H:i" }}</span>
                 {% endif %}
             </div>
         </div>
@@ -111,25 +113,23 @@
 {% if concluidas %}
 <section class="trip-section">
     <h2 class="section-title section-title-concluido">
-        ✅ Viagens Concluídas
+        🏁 Viagens Concluídas
         <span class="badge">{{ concluidas|length }}</span>
     </h2>
     
     <div class="trip-cards">
         {% for viagem, registro in concluidas %}
         <div class="trip-card trip-card-concluido">
-            <div class="trip-header">
-                <div class="trip-dates">
-                    {{ viagem.data_viagem|date:"H:i" }} - {{ viagem.data_fim_prevista|date:"H:i" }}
+            <div class="trip-header" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+                <div style="font-size: 18px; font-weight: 700; color: #1e293b; margin: 0;">
+                    {% if viagem.veiculo %}{{ viagem.veiculo.marca }} {{ viagem.veiculo.placa }}{% else %}--{% endif %}
                 </div>
-                <div class="trip-status trip-status-concluido">✅ Concluída</div>
+                <div class="trip-dates" style="font-size: 13px; color: #64748b;">
+                    {{ viagem.data_viagem|date:"d/m | H:i " }} - {{ viagem.data_fim_prevista|date:" d/m | H:i" }}
+                </div>
             </div>
             
             <div class="trip-body">
-                <div class="trip-info">
-                    <span class="info-icon">🚐</span>
-                    <span>{% if viagem.veiculo %}{{ viagem.veiculo.marca }} {{ viagem.veiculo.placa }}{% else %}--{% endif %}</span>
-                </div>
                 <div class="trip-info">
                     <span class="info-icon">👤</span>
                     <span>{% if viagem.motorista %}{{ viagem.motorista.nome }}{% else %}--{% endif %}</span>
@@ -138,20 +138,30 @@
                     <span class="info-icon">📍</span>
                     <span>{{ viagem.local_embarque }} → {{ viagem.local_desembarque }}</span>
                 </div>
+                                <div class="trip-info">
+                    <span class="info-icon">👥</span>
+                    <span>{{ viagem.quantidade_passageiros }} passageiros</span>
+                </div>
             </div>
             
             <div class="trip-details">
                 <div class="detail-item">
-                    <span class="detail-label">Saída:</span>
+                    <span class="detail-label">↗️ Saída:</span>
                     <span>{{ registro.horario_saida|date:"d/m H:i" }}</span>
                 </div>
                 <div class="detail-item">
-                    <span class="detail-label">Chegada:</span>
+                    <span class="detail-label">📥 Chegada:</span>
                     <span>{{ registro.horario_chegada|date:"d/m H:i" }}</span>
                 </div>
-                <div class="detail-item">
-                    <span class="detail-label">KM:</span>
-                    <span>{% if registro.km_saida %}{{ registro.km_saida }}{% else %}--{% endif %} → {% if registro.km_chegada %}{{ registro.km_chegada }}{% else %}--{% endif %}</span>
+                <div class="detail-item" style="flex-direction: column; gap: 4px;">
+                    <div>
+                        <span class="detail-label">Km Saída: </span>
+                        <span class="km-value">{{ registro.km_saida|floatformat:"0" }}</span>
+                    </div>
+                    <div>
+                        <span class="detail-label">Km Chegada: </span>
+                        <span class="km-value">{{ registro.km_chegada|floatformat:"0" }}</span>
+                    </div>
                 </div>
             </div>
         </div>

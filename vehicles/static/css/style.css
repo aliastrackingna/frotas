@@ -330,9 +330,18 @@ tr.row-pendente:hover { background-color: #ffe0b2; }
 
 .detail-label {
     font-weight: 500;
-    color: #999;
+    color: #555;
     font-size: 11px;
     text-transform: uppercase;
+}
+
+.trip-info span:last-child {
+    color: #333;
+}
+
+.km-value {
+    font-weight: 600;
+    color: #333;
 }
 
 .empty-state {
