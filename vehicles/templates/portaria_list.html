@@ -76,6 +76,20 @@
                     <span>{{ viagem.quantidade_passageiros }} passageiros</span>
                 </div>
             </div>
+             <div class="trip-details">
+                <div class="detail-item">
+                    <span class="detail-label">Saída:</span>
+                    <span>{{ registro.horario_saida|date:"d/m H:i" }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Chegada:</span>
+                    <span>{{ registro.horario_chegada|date:"d/m H:i" }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">KM:</span>
+                    <span>{% if registro.km_saida %}{{ registro.km_saida }}{% else %}--{% endif %} → {% if registro.km_chegada %}{{ registro.km_chegada }}{% else %}--{% endif %}</span>
+                </div>
+            </div>
             
             <div class="trip-actions">
                 {% if not registro or not registro.horario_saida %}
