@@ -352,18 +352,22 @@ def solicitacao_viagem_create(request):
 
                 capacidade = solicitacao.veiculo.quantidade_passageiros
                 
-                if quantidade_passageiros > capacidade:
-                    solicitacao.status = 'Cancelada'
-                    solicitacao.observacao = 'Não temos veículos para atender a demanda'
-                    solicitacao.save()
-                elif (quantidade_passageiros + 3) > capacidade:
-                    solicitacao.status = 'Pendente'
-                    solicitacao.observacao = 'Veículo disponível com a capacidade maior do que o solicitado, esperando autorização do coordenador'
-                    solicitacao.save()
-                else:
+                if quantidade_passageiros >= 23:
                     solicitacao.status = 'Confirmada'
-                    solicitacao.save()
+                    solicitacao.observacao = 'Alocado automaticamente para veículo de grande porte.'
                 
+                else:
+                    # Calcula quantos lugares vão sobrar no veículo
+                    lugares_vazios = capacidade - quantidade_passageiros
+                    # Se sobrar mais de 4 lugares (ex: 2 pessoas numa minivan de 7, ou 5 numa van de 15)
+                    # Manda para a coordenação justificar o custo.
+                    if lugares_vazios > 4: 
+                        solicitacao.status = 'Pendente'
+                        solicitacao.observacao = f'Alerta de ociosidade: Solicitado para {quantidade_passageiros}, mas o menor veículo disponível tem {capacidade} lugares. Requer autorização do coordenador.'
+                    else:
+                        solicitacao.status = 'Confirmada'
+                        solicitacao.observacao = 'Veículo alocado com eficiência.'
+
                 return redirect('solicitacao_viagem_detail', pk=solicitacao.pk)
             else:
                 errors = []
