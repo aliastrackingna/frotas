@@ -1,27 +1,27 @@
 {% extends 'base.html' %}
 
-{% block title %}{% if motoristah %}Editar{% else %}Novo{% endif %} Motorista - Frotas{% endblock %}
+{% block title %}{% if motorista %}Editar{% else %}Novo{% endif %} Motorista - Frotas{% endblock %}
 
 {% block content %}
 <div class="card">
-    <h1>{% if motoristah %}Editar{% else %}Novo{% endif %} Motorista</h1>
+    <h1>{% if motorista %}Editar{% else %}Novo{% endif %} Motorista</h1>
     
     <form method="post">
         {% csrf_token %}
         <div style="margin-bottom: 15px;">
             <label for="nome" style="display: block; font-weight: bold; margin-bottom: 5px;">Nome:</label>
-            <input type="text" id="nome" name="nome" value="{{ motoristah.nome|default:'' }}" required maxlength="100" style="width: 100%; padding: 10px;">
+            <input type="text" id="nome" name="nome" value="{{ motorista.nome|default:'' }}" required maxlength="100" style="width: 100%; padding: 10px;">
         </div>
         
         <div style="margin-bottom: 15px;">
             <label for="tipo_carteira" style="display: block; font-weight: bold; margin-bottom: 5px;">Tipo de Carteira:</label>
             <select id="tipo_carteira" name="tipo_carteira" required style="width: 100%; padding: 10px;">
                 <option value="">Selecione...</option>
-                <option value="A" {% if motoristah.tipo_carteira == 'A' %}selected{% endif %}>A - Motocicleta</option>
-                <option value="B" {% if motoristah.tipo_carteira == 'B' %}selected{% endif %}>B - Carro</option>
-                <option value="C" {% if motoristah.tipo_carteira == 'C' %}selected{% endif %}>C - Caminhão</option>
-                <option value="D" {% if motoristah.tipo_carteira == 'D' %}selected{% endif %}>D - Ônibus</option>
-                <option value="E" {% if motoristah.tipo_carteira == 'E' %}selected{% endif %}>E - Carreta</option>
+                <option value="A" {% if motorista.tipo_carteira == 'A' %}selected{% endif %}>A - Motocicleta</option>
+                <option value="B" {% if motorista.tipo_carteira == 'B' %}selected{% endif %}>B - Carro</option>
+                <option value="C" {% if motorista.tipo_carteira == 'C' %}selected{% endif %}>C - Caminhão</option>
+                <option value="D" {% if motorista.tipo_carteira == 'D' %}selected{% endif %}>D - Ônibus</option>
+                <option value="E" {% if motorista.tipo_carteira == 'E' %}selected{% endif %}>E - Carreta</option>
             </select>
         </div>
         

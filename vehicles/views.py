@@ -70,17 +70,17 @@ def observacao_create(request, veiculo_pk):
     return redirect('veiculo_detail', pk=veiculo_pk)
 
 
-def motoristah_list(request):
+def motorista_list(request):
     motores = Motorista.objects.all()
     return render(request, 'motorista_list.html', {'motoristas': motores})
 
 
-def motoristah_detail(request, pk):
-    motoristah = get_object_or_404(Motorista, pk=pk)
-    return render(request, 'motorista_detail.html', {'motorista': motoristah})
+def motorista_detail(request, pk):
+    motorista = get_object_or_404(Motorista, pk=pk)
+    return render(request, 'motorista_detail.html', {'motorista': motorista})
 
 
-def motoristah_create(request):
+def motorista_create(request):
     if request.method == 'POST':
         nome = request.POST['nome']
         tipo_carteira = request.POST['tipo_carteira']
@@ -89,22 +89,22 @@ def motoristah_create(request):
     return render(request, 'motorista_form.html', {})
 
 
-def motoristah_update(request, pk):
-    motoristah = get_object_or_404(Motorista, pk=pk)
+def motorista_update(request, pk):
+    motorista = get_object_or_404(Motorista, pk=pk)
     if request.method == 'POST':
-        motoristah.nome = request.POST['nome']
-        motoristah.tipo_carteira = request.POST['tipo_carteira']
-        motoristah.save()
+        motorista.nome = request.POST['nome']
+        motorista.tipo_carteira = request.POST['tipo_carteira']
+        motorista.save()
         return redirect('motorista_list')
-    return render(request, 'motorista_form.html', {'motorista': motoristah})
+    return render(request, 'motorista_form.html', {'motorista': motorista})
 
 
-def motoristah_delete(request, pk):
-    motoristah = get_object_or_404(Motorista, pk=pk)
+def motorista_delete(request, pk):
+    motorista = get_object_or_404(Motorista, pk=pk)
     if request.method == 'POST':
-        motoristah.delete()
+        motorista.delete()
         return redirect('motorista_list')
-    return render(request, 'motorista_confirm_delete.html', {'motorista': motoristah})
+    return render(request, 'motorista_confirm_delete.html', {'motorista': motorista})
 
 
 def solicitacao_list(request):
@@ -128,9 +128,9 @@ def solicitacao_gerenciar(request, pk):
         action = request.POST.get('action')
         
         if action == 'atribuir_motorista':
-            motoristah_id = request.POST.get('motorista')
-            if motoristah_id:
-                solicitacao.motorista_id = motoristah_id
+            motorista_id = request.POST.get('motorista')
+            if motorista_id:
+                solicitacao.motorista_id = motorista_id
                 if solicitacao.status == 'Pendente':
                     solicitacao.status = 'Confirmada'
                 solicitacao.save()
@@ -287,9 +287,9 @@ def solicitacao_viagem_gerenciar(request, pk):
                 return redirect('solicitacao_viagem_detail', pk=pk)
         
         elif action == 'atribuir_motorista':
-            motoristah_id = request.POST.get('motorista')
-            if motoristah_id:
-                solicitacao.motorista_id = motoristah_id
+            motorista_id = request.POST.get('motorista')
+            if motorista_id:
+                solicitacao.motorista_id = motorista_id
                 if solicitacao.status == 'Pendente' and solicitacao.veiculo:
                     solicitacao.status = 'Confirmada'
                 solicitacao.save()
