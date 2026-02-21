@@ -14,12 +14,32 @@ def portaria_list(request):
     ).order_by('data_viagem')
     
     viagens_registros = []
+    pendentes = []
     for v in viagens:
         try:
             registro = v.registro_portaria
         except RegistroPortaria.DoesNotExist:
             registro = None
-        viagens_registros.append((v, registro))
+        
+        if registro and registro.horario_chegada:
+            viagens_registros.append((v, registro))
+        else:
+            pendentes.append((v, registro))
+    
+    pendentes_outras_datas = SolicitacaoViagem.objects.filter(
+        data_viagem__date__lt=hoje
+    ).exclude(
+        registro_portaria__horario_chegada__isnull=False
+    ).order_by('-data_viagem')[:10]
+    
+    for v in pendentes_outras_datas:
+        try:
+            registro = v.registro_portaria
+        except RegistroPortaria.DoesNotExist:
+            registro = None
+        pendentes.append((v, registro))
+    
+    viagens_registros.extend(pendentes)
     
     return render(request, 'portaria_list.html', {
         'viagens_registros': viagens_registros,

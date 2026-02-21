@@ -13,23 +13,32 @@ from .utils import (
 
 
 def solicitacao_viagem_list(request):
-    solicitacoes = SolicitacaoViagem.objects.all()
+    data_inicio_pesquisa = request.GET.get('data_inicio')
+    data_fim_pesquisa = request.GET.get('data_fim')
     
-    data_inicio = request.GET.get('data_inicio')
-    data_fim = request.GET.get('data_fim')
+    filtros = {}
     
-    if data_inicio:
-        solicitacoes = solicitacoes.filter(data_viagem__date__gte=data_inicio)
-    if data_fim:
-        solicitacoes = solicitacoes.filter(data_viagem__date__lte=data_fim)
+    # Se o usuário preencheu a data INICIAL da pesquisa
+    # A viagem deve ter terminado DEPOIS ou NO MESMO DIA dessa data
+    if data_inicio_pesquisa:
+        filtros['data_fim_prevista__date__gte'] = data_inicio_pesquisa
+        
+    # Se o usuário preencheu a data FINAL da pesquisa
+    # A viagem deve ter começado ANTES ou NO MESMO DIA dessa data
+    if data_fim_pesquisa:
+        filtros['data_viagem__date__lte'] = data_fim_pesquisa
+
+    # Executa a query com os filtros combinados (lógica AND)
+    # Graças à Lazy Evaluation do Django, isso gera apenas um SELECT no banco
+    solicitacoes = SolicitacaoViagem.objects.filter(**filtros)
     
     today = datetime.now().strftime('%Y-%m-%d')
     tomorrow = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
     
     return render(request, 'solicitacao_viagem_list.html', {
         'solicitacoes': solicitacoes,
-        'data_inicio': data_inicio,
-        'data_fim': data_fim,
+        'data_inicio': data_inicio_pesquisa,
+        'data_fim': data_fim_pesquisa,
         'today': today,
         'tomorrow': tomorrow
     })
