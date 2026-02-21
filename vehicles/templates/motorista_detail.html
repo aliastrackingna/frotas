@@ -12,15 +12,11 @@
         <p><label>Tipo de Carteira:</label> {{ motorista.get_tipo_carteira_display }}</p>
     </div>
     
-    <div style="margin-top: 20px;">
+    <div class="margin-top">
         <a href="{% url 'motorista_list' %}" class="btn btn-back">Voltar</a>
         <a href="{% url 'motorista_update' motorista.id_motorista %}" class="btn btn-edit">Editar</a>
         <a href="{% url 'motorista_delete' motorista.id_motorista %}" class="btn btn-delete">Excluir</a>
     </div>
 </div>
 
-<style>
-    .detail p { margin: 10px 0; }
-    .detail label { font-weight: bold; margin-right: 10px; }
-</style>
 {% endblock %}

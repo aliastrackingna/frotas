@@ -15,16 +15,16 @@
         <p><label>Data de Criação:</label> {{ solicitacao.data_criacao|date:"d/m/Y H:i" }}</p>
     </div>
     
-    <hr style="margin: 20px 0; border: 1px solid #ddd;">
+    <hr class="divider">
     
     <h2>Ações</h2>
     
-    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
-        <form method="post" style="display: inline;">
+    <div class="actions-list">
+        <form method="post">
             {% csrf_token %}
             <input type="hidden" name="action" value="atribuir_motorista">
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <select name="motorista" required style="padding: 10px;">
+            <div class="actions-form">
+                <select name="motorista" required>
                     <option value="">Selecione um motorista...</option>
                     {% for m in motoristas %}
                     <option value="{{ m.id_motorista }}" {% if solicitacao.motorista_id == m.id_motorista %}selected{% endif %}>
@@ -32,48 +32,38 @@
                     </option>
                     {% endfor %}
                 </select>
-                <button type="submit" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Atribuir Motorista</button>
+                <button type="submit" class="btn btn-primary">Atribuir Motorista</button>
             </div>
         </form>
     </div>
     
-    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+    <div class="actions-list">
         {% if solicitacao.status == 'Pendente' %}
-        <form method="post" style="display: inline;">
+        <form method="post">
             {% csrf_token %}
             <input type="hidden" name="action" value="confirmar">
-            <button type="submit" style="padding: 10px 20px; background-color: #2196F3; color: white; border: none; cursor: pointer;">Confirmar Sem Motorista</button>
+            <button type="submit" class="btn btn-edit">Confirmar Sem Motorista</button>
         </form>
         {% endif %}
         
         {% if solicitacao.status != 'Cancelada' and solicitacao.status != 'Concluida' %}
-        <form method="post" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja cancelar esta solicitação?');">
+        <form method="post" onsubmit="return confirm('Tem certeza que deseja cancelar esta solicitação?');">
             {% csrf_token %}
             <input type="hidden" name="action" value="cancelar">
-            <button type="submit" style="padding: 10px 20px; background-color: #f44336; color: white; border: none; cursor: pointer;">Cancelar Solicitação</button>
+            <button type="submit" class="btn btn-delete">Cancelar Solicitação</button>
         </form>
         
-        <form method="post" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja concluir esta solicitação?');">
+        <form method="post" onsubmit="return confirm('Tem certeza que deseja concluir esta solicitação?');">
             {% csrf_token %}
             <input type="hidden" name="action" value="concluir">
-            <button type="submit" style="padding: 10px 20px; background-color: #9C27B0; color: white; border: none; cursor: pointer;">Concluir Solicitação</button>
+            <button type="submit" class="btn btn-purple">Concluir Solicitação</button>
         </form>
         {% endif %}
     </div>
     
-    <div style="margin-top: 30px;">
+    <div class="margin-top-lg">
         <a href="{% url 'solicitacao_detail' solicitacao.id %}" class="btn btn-back">Voltar aos Detalhes</a>
         <a href="{% url 'solicitacao_list' %}" class="btn btn-back">Voltar à Lista</a>
     </div>
 </div>
-
-<style>
-    .detail p { margin: 10px 0; }
-    .detail label { font-weight: bold; margin-right: 10px; }
-    .status-Pendente { color: #FF9800; font-weight: bold; }
-    .status-Confirmada { color: #4CAF50; font-weight: bold; }
-    .status-Concluida { color: #2196F3; font-weight: bold; }
-    .status-Cancelada { color: #f44336; font-weight: bold; }
-    .btn { padding: 10px 20px; text-decoration: none; display: inline-block; border-radius: 4px; background-color: #9E9E9E; color: white; }
-</style>
 {% endblock %}

@@ -254,7 +254,25 @@ def get_motoristas_disponiveis_viagem(data_inicio, data_fim):
 
 def solicitacao_viagem_list(request):
     solicitacoes = SolicitacaoViagem.objects.all()
-    return render(request, 'solicitacao_viagem_list.html', {'solicitacoes': solicitacoes})
+    
+    data_inicio = request.GET.get('data_inicio')
+    data_fim = request.GET.get('data_fim')
+    
+    if data_inicio:
+        solicitacoes = solicitacoes.filter(data_viagem__date__gte=data_inicio)
+    if data_fim:
+        solicitacoes = solicitacoes.filter(data_viagem__date__lte=data_fim)
+    
+    today = datetime.now().strftime('%Y-%m-%d')
+    tomorrow = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
+    
+    return render(request, 'solicitacao_viagem_list.html', {
+        'solicitacoes': solicitacoes,
+        'data_inicio': data_inicio,
+        'data_fim': data_fim,
+        'today': today,
+        'tomorrow': tomorrow
+    })
 
 
 def solicitacao_viagem_detail(request, pk):

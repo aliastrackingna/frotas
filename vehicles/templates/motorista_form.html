@@ -8,14 +8,14 @@
     
     <form method="post">
         {% csrf_token %}
-        <div style="margin-bottom: 15px;">
-            <label for="nome" style="display: block; font-weight: bold; margin-bottom: 5px;">Nome:</label>
-            <input type="text" id="nome" name="nome" value="{{ motorista.nome|default:'' }}" required maxlength="100" style="width: 100%; padding: 10px;">
+        <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" value="{{ motorista.nome|default:'' }}" required maxlength="100">
         </div>
         
-        <div style="margin-bottom: 15px;">
-            <label for="tipo_carteira" style="display: block; font-weight: bold; margin-bottom: 5px;">Tipo de Carteira:</label>
-            <select id="tipo_carteira" name="tipo_carteira" required style="width: 100%; padding: 10px;">
+        <div class="form-group">
+            <label for="tipo_carteira">Tipo de Carteira:</label>
+            <select id="tipo_carteira" name="tipo_carteira" required>
                 <option value="">Selecione...</option>
                 <option value="A" {% if motorista.tipo_carteira == 'A' %}selected{% endif %}>A - Motocicleta</option>
                 <option value="B" {% if motorista.tipo_carteira == 'B' %}selected{% endif %}>B - Carro</option>
@@ -25,8 +25,8 @@
             </select>
         </div>
         
-        <button type="submit" style="padding: 12px 24px; background-color: #4CAF50; color: white; border: none; cursor: pointer; font-size: 16px;">Salvar</button>
-        <a href="{% url 'motorista_list' %}" style="display:inline-block; padding: 12px 24px; background-color: #9E9E9E; color: white; text-decoration: none; margin-left: 10px;">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{% url 'motorista_list' %}" class="btn btn-back margin-left">Cancelar</a>
     </form>
 </div>
 {% endblock %}

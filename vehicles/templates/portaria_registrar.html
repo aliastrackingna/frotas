@@ -15,32 +15,28 @@
         <p><label>Local de Desembarque:</label> {{ viagem.local_desembarque }}</p>
     </div>
     
-    <hr style="margin: 20px 0; border: 1px solid #ddd;">
+    <hr class="divider">
     
     <form method="post">
         {% csrf_token %}
         
-        <div style="margin-bottom: 15px;">
-            <label for="km" style="display: block; font-weight: bold; margin-bottom: 5px;">
+        <div class="form-group">
+            <label for="km">
                 {% if acao == 'saida' %}Km de Saída:{% else %}Km de Chegada:{% endif %}
             </label>
-            <input type="number" id="km" name="{% if acao == 'saida' %}km_saida{% else %}km_chegada{% endif %}" required min="0" style="width: 100%; padding: 10px;">
+            <input type="number" id="km" name="{% if acao == 'saida' %}km_saida{% else %}km_chegada{% endif %}" required min="0">
         </div>
         
-        <div style="margin-bottom: 15px;">
-            <label for="observacao" style="display: block; font-weight: bold; margin-bottom: 5px;">Observação:</label>
-            <textarea id="observacao" name="{% if acao == 'saida' %}observacao_saida{% else %}observacao_chegada{% endif %}" rows="3" style="width: 100%; padding: 10px;"></textarea>
+        <div class="form-group">
+            <label for="observacao">Observação:</label>
+            <textarea id="observacao" name="{% if acao == 'saida' %}observacao_saida{% else %}observacao_chegada{% endif %}" rows="3"></textarea>
         </div>
         
-        <button type="submit" style="padding: 12px 24px; background-color: #4CAF50; color: white; border: none; cursor: pointer; font-size: 16px;">
+        <button type="submit" class="btn btn-primary">
             {% if acao == 'saida' %}Registrar Saída{% else %}Registrar Chegada{% endif %}
         </button>
-        <a href="{% url 'portaria_list' %}" style="display:inline-block; padding: 12px 24px; background-color: #9E9E9E; color: white; text-decoration: none; margin-left: 10px;">Cancelar</a>
+        <a href="{% url 'portaria_list' %}" class="btn btn-back">Cancelar</a>
     </form>
 </div>
 
-<style>
-    .detail p { margin: 10px 0; }
-    .detail label { font-weight: bold; margin-right: 10px; }
-</style>
 {% endblock %}

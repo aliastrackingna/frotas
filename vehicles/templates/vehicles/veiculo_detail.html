@@ -15,7 +15,7 @@
         <p><label>KM Atual:</label> {{ veiculo.kms_atual }}</p>
     </div>
     
-    <div style="margin-top: 20px;">
+    <div class="margin-top">
         <a href="{% url 'veiculo_list' %}" class="btn btn-back">Voltar</a>
         <a href="{% url 'veiculo_update' veiculo.id_veiculo %}" class="btn btn-edit">Editar</a>
         <a href="{% url 'veiculo_delete' veiculo.id_veiculo %}" class="btn btn-delete">Excluir</a>
@@ -25,25 +25,21 @@
 <div class="card">
     <h2>Observações</h2>
     
-    <form method="post" action="{% url 'observacao_create' veiculo.id_veiculo %}" style="margin: 15px 0;">
+    <form method="post" action="{% url 'observacao_create' veiculo.id_veiculo %}" class="form-margin-bottom">
         {% csrf_token %}
-        <textarea name="texto" rows="3" placeholder="Digite uma observação..." required style="width: 100%; padding: 10px;"></textarea>
-        <button type="submit" class="btn btn-primary" style="margin-top: 5px;">Adicionar Observação</button>
+        <div class="form-group">
+            <textarea name="texto" rows="3" placeholder="Digite uma observação..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Adicionar Observação</button>
     </form>
     
     <ul>
         {% for obs in veiculo.observacoes.all %}
-        <li style="padding: 10px; border-bottom: 1px solid #eee;">{{ obs.texto }} <br><small style="color: #999;">{{ obs.data_criacao }}</small></li>
+        <li class="detail-item">{{ obs.texto }} <br><small>{{ obs.data_criacao }}</small></li>
         {% empty %}
         <li>Nenhuma observação.</li>
         {% endfor %}
     </ul>
 </div>
 
-<style>
-    .detail p { margin: 10px 0; }
-    .detail label { font-weight: bold; margin-right: 10px; }
-    ul { list-style: none; padding: 0; }
-    li { padding: 10px; }
-</style>
 {% endblock %}

@@ -29,22 +29,9 @@
         <p><label>Data de Criação:</label> {{ solicitacao.data_criacao|date:"d/m/Y H:i" }}</p>
     </div>
     
-    <div style="margin-top: 20px;">
+    <div class="margin-top">
         <a href="{% url 'solicitacao_viagem_list' %}" class="btn btn-back">Voltar</a>
         <a href="{% url 'solicitacao_viagem_gerenciar' solicitacao.id %}" class="btn btn-edit">Gerenciar</a>
     </div>
 </div>
-
-<style>
-    .detail p { margin: 10px 0; }
-    .detail label { font-weight: bold; margin-right: 10px; }
-    .detail ul { margin: 5px 0; padding-left: 20px; }
-    .status-Pendente { color: #FF9800; font-weight: bold; }
-    .status-Confirmada { color: #4CAF50; font-weight: bold; }
-    .status-Concluida { color: #2196F3; font-weight: bold; }
-    .status-Cancelada { color: #f44336; font-weight: bold; }
-    .btn { padding: 10px 20px; text-decoration: none; display: inline-block; border-radius: 4px; }
-    .btn-back { background-color: #9E9E9E; color: white; }
-    .btn-edit { background-color: #2196F3; color: white; margin-left: 10px; }
-</style>
 {% endblock %}

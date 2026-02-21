@@ -7,7 +7,7 @@
     <h1>Agendar Solicitação de Motorista</h1>
     
     {% if error %}
-    <div style="padding: 15px; background-color: {% if success %}#4CAF50{% else %}#f44336{% endif %}; color: white; border-radius: 4px; margin-bottom: 20px;">
+    <div class="alert {% if success %}alert-success{% else %}alert-error{% endif %}">
         {{ error }}
     </div>
     {% endif %}
@@ -15,23 +15,23 @@
     <form method="post">
         {% csrf_token %}
         
-        <div style="margin-bottom: 15px;">
-            <label for="data_inicio" style="display: block; font-weight: bold; margin-bottom: 5px;">Data e Hora de Início:</label>
-            <input type="datetime-local" id="data_inicio" name="data_inicio" required style="width: 100%; padding: 10px;">
+        <div class="form-group">
+            <label for="data_inicio">Data e Hora de Início:</label>
+            <input type="datetime-local" id="data_inicio" name="data_inicio" required>
         </div>
         
-        <div style="margin-bottom: 15px;">
-            <label for="data_fim_prevista" style="display: block; font-weight: bold; margin-bottom: 5px;">Data e Hora Prevista de Retorno:</label>
-            <input type="datetime-local" id="data_fim_prevista" name="data_fim_prevista" required style="width: 100%; padding: 10px;">
+        <div class="form-group">
+            <label for="data_fim_prevista">Data e Hora Prevista de Retorno:</label>
+            <input type="datetime-local" id="data_fim_prevista" name="data_fim_prevista" required>
         </div>
         
-        <div style="margin-bottom: 15px;">
-            <label for="observacao" style="display: block; font-weight: bold; margin-bottom: 5px;">Observação:</label>
-            <textarea id="observacao" name="observacao" rows="3" style="width: 100%; padding: 10px;"></textarea>
+        <div class="form-group">
+            <label for="observacao">Observação:</label>
+            <textarea id="observacao" name="observacao" rows="3"></textarea>
         </div>
         
-        <button type="submit" style="padding: 12px 24px; background-color: #4CAF50; color: white; border: none; cursor: pointer; font-size: 16px;">Agendar</button>
-        <a href="{% url 'solicitacao_list' %}" style="display:inline-block; padding: 12px 24px; background-color: #9E9E9E; color: white; text-decoration: none; margin-left: 10px;">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Agendar</button>
+        <a href="{% url 'solicitacao_list' %}" class="btn btn-back margin-left">Cancelar</a>
     </form>
 </div>
 {% endblock %}

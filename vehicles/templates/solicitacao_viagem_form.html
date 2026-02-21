@@ -7,7 +7,7 @@
     <h1>Nova Solicitação de Viagem</h1>
     
     {% if error %}
-    <div style="padding: 15px; background-color: {% if success %}#4CAF50{% else %}#f44336{% endif %}; color: white; border-radius: 4px; margin-bottom: 20px;">
+    <div class="alert {% if success %}alert-success{% else %}alert-error{% endif %}">
         {{ error }}
     </div>
     {% endif %}
@@ -15,48 +15,48 @@
     <form method="post" id="viagem-form">
         {% csrf_token %}
         
-        <div style="margin-bottom: 15px;">
-            <label for="data_viagem" style="display: block; font-weight: bold; margin-bottom: 5px;">Data e Hora da Viagem:</label>
-            <input type="datetime-local" id="data_viagem" name="data_viagem" required style="width: 100%; padding: 10px;">
+        <div class="form-group">
+            <label for="data_viagem">Data e Hora da Viagem:</label>
+            <input type="datetime-local" id="data_viagem" name="data_viagem" required>
         </div>
         
-        <div style="margin-bottom: 15px;">
-            <label for="data_fim_prevista" style="display: block; font-weight: bold; margin-bottom: 5px;">Data e Hora Prevista de Retorno:</label>
-            <input type="datetime-local" id="data_fim_prevista" name="data_fim_prevista" required style="width: 100%; padding: 10px;">
+        <div class="form-group">
+            <label for="data_fim_prevista">Data e Hora Prevista de Retorno:</label>
+            <input type="datetime-local" id="data_fim_prevista" name="data_fim_prevista" required>
         </div>
         
-        <div style="margin-bottom: 15px;">
-            <label for="quantidade_passageiros" style="display: block; font-weight: bold; margin-bottom: 5px;">Quantidade de Passageiros:</label>
-            <input type="number" id="quantidade_passageiros" name="quantidade_passageiros" value="1" min="1" required style="width: 100%; padding: 10px;">
+        <div class="form-group">
+            <label for="quantidade_passageiros">Quantidade de Passageiros:</label>
+            <input type="number" id="quantidade_passageiros" name="quantidade_passageiros" value="1" min="1" required>
         </div>
         
-        <div style="margin-bottom: 15px;">
-            <label for="local_embarque" style="display: block; font-weight: bold; margin-bottom: 5px;">Local de Embarque:</label>
-            <input type="text" id="local_embarque" name="local_embarque" required style="width: 100%; padding: 10px;">
+        <div class="form-group">
+            <label for="local_embarque">Local de Embarque:</label>
+            <input type="text" id="local_embarque" name="local_embarque" required>
         </div>
         
-        <div style="margin-bottom: 15px;">
-            <label for="local_desembarque" style="display: block; font-weight: bold; margin-bottom: 5px;">Local de Desembarque:</label>
-            <input type="text" id="local_desembarque" name="local_desembarque" required style="width: 100%; padding: 10px;">
+        <div class="form-group">
+            <label for="local_desembarque">Local de Desembarque:</label>
+            <input type="text" id="local_desembarque" name="local_desembarque" required>
         </div>
         
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Itinerário (locais adicionais):</label>
+        <div class="form-group">
+            <label>Itinerário (locais adicionais):</label>
             <div id="itinerario-container">
-                <div class="itinerario-item" style="display: flex; gap: 10px; margin-bottom: 10px;">
-                    <input type="text" name="itinerario[]" placeholder="Local adicional..." style="flex: 1; padding: 10px;">
-                    <button type="button" onclick="addItinerario()" style="padding: 10px; background-color: #2196F3; color: white; border: none; cursor: pointer;">+</button>
+                <div class="form-row">
+                    <input type="text" name="itinerario[]" placeholder="Local adicional...">
+                    <button type="button" onclick="addItinerario()" class="btn btn-edit">+</button>
                 </div>
             </div>
         </div>
         
-        <div style="margin-bottom: 15px;">
-            <label for="observacao" style="display: block; font-weight: bold; margin-bottom: 5px;">Observação:</label>
-            <textarea id="observacao" name="observacao" rows="3" style="width: 100%; padding: 10px;"></textarea>
+        <div class="form-group">
+            <label for="observacao">Observação:</label>
+            <textarea id="observacao" name="observacao" rows="3"></textarea>
         </div>
         
-        <button type="submit" style="padding: 12px 24px; background-color: #4CAF50; color: white; border: none; cursor: pointer; font-size: 16px;">Agendar</button>
-        <a href="{% url 'solicitacao_viagem_list' %}" style="display:inline-block; padding: 12px 24px; background-color: #9E9E9E; color: white; text-decoration: none; margin-left: 10px;">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Agendar</button>
+        <a href="{% url 'solicitacao_viagem_list' %}" class="btn btn-back margin-left">Cancelar</a>
     </form>
 </div>
 
@@ -64,11 +64,10 @@
     function addItinerario() {
         const container = document.getElementById('itinerario-container');
         const div = document.createElement('div');
-        div.className = 'itinerario-item';
-        div.style = 'display: flex; gap: 10px; margin-bottom: 10px;';
+        div.className = 'form-row';
         div.innerHTML = `
-            <input type="text" name="itinerario[]" placeholder="Local adicional..." style="flex: 1; padding: 10px;">
-            <button type="button" onclick="this.parentElement.remove()" style="padding: 10px; background-color: #f44336; color: white; border: none; cursor: pointer;">-</button>
+            <input type="text" name="itinerario[]" placeholder="Local adicional...">
+            <button type="button" onclick="this.parentElement.remove()" class="btn btn-delete">-</button>
         `;
         container.appendChild(div);
     }
