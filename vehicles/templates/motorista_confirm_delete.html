@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Excluir Motorista - Frotas{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Excluir Motorista</h1>
+    
+    <div style="background-color: #ffebee; border-left: 4px solid #f44336; padding: 15px; margin: 20px 0;">
+        <p style="margin: 0;">Tem certeza que deseja excluir o motorista <strong>{{ motoristah.nome }}</strong> ({{ motoristah.get_tipo_carteira_display }})?</p>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" style="padding: 12px 24px; background-color: #f44336; color: white; border: none; cursor: pointer; font-size: 16px;">Sim, Excluir</button>
+        <a href="{% url 'motorista_list' %}" style="display:inline-block; padding: 12px 24px; background-color: #9E9E9E; color: white; text-decoration: none; margin-left: 10px;">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

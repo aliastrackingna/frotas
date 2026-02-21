@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes do Motorista - Frotas{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Detalhes do Motorista</h1>
+    
+    <div class="detail">
+        <p><label>ID:</label> {{ motoristah.id_motorista }}</p>
+        <p><label>Nome:</label> {{ motoristah.nome }}</p>
+        <p><label>Tipo de Carteira:</label> {{ motoristah.get_tipo_carteira_display }}</p>
+    </div>
+    
+    <div style="margin-top: 20px;">
+        <a href="{% url 'motorista_list' %}" class="btn btn-back">Voltar</a>
+        <a href="{% url 'motorista_update' motoristah.id_motorista %}" class="btn btn-edit">Editar</a>
+        <a href="{% url 'motorista_delete' motoristah.id_motorista %}" class="btn btn-delete">Excluir</a>
+    </div>
+</div>
+
+<style>
+    .detail p { margin: 10px 0; }
+    .detail label { font-weight: bold; margin-right: 10px; }
+</style>
+{% endblock %}

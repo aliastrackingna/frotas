@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-from .models import Veiculo
+from .models import Veiculo, Motorista
 
 
 def index(request):
@@ -64,3 +64,40 @@ def observacao_create(request, veiculo_pk):
         if texto:
             veiculo.observacoes.create(texto=texto)
     return redirect('veiculo_detail', pk=veiculo_pk)
+
+
+def motoristah_list(request):
+    motores = Motorista.objects.all()
+    return render(request, 'motorista_list.html', {'motoristas': motores})
+
+
+def motoristah_detail(request, pk):
+    motorista = get_object_or_404(Motorista, pk=pk)
+    return render(request, 'motorista_detail.html', {'motorista': motorista})
+
+
+def motoristah_create(request):
+    if request.method == 'POST':
+        nome = request.POST['nome']
+        tipo_carteira = request.POST['tipo_carteira']
+        Motorista.objects.create(nome=nome, tipo_carteira=tipo_carteira)
+        return redirect('motorista_list')
+    return render(request, 'motorista_form.html', {})
+
+
+def motoristah_update(request, pk):
+    motoristah = get_object_or_404(Motorista, pk=pk)
+    if request.method == 'POST':
+        motoristah.nome = request.POST['nome']
+        motoristah.tipo_carteira = request.POST['tipo_carteira']
+        motoristah.save()
+        return redirect('motorista_list')
+    return render(request, 'motorista_form.html', {'motorista': motoristah})
+
+
+def motoristah_delete(request, pk):
+    motoristah = get_object_or_404(Motorista, pk=pk)
+    if request.method == 'POST':
+        motoristah.delete()
+        return redirect('motorista_list')
+    return render(request, 'motorista_confirm_delete.html', {'motorista': motoristah})
