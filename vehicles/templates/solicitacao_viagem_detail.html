@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes da Viagem - Frotas{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Detalhes da Viagem</h1>
+    
+    <div class="detail">
+        <p><label>ID:</label> {{ solicitacao.id }}</p>
+        <p><label>Data e Hora da Viagem:</label> {{ solicitacao.data_viagem|date:"d/m/Y H:i" }}</p>
+        <p><label>Data e Hora Prevista de Retorno:</label> {{ solicitacao.data_fim_prevista|date:"d/m/Y H:i" }}</p>
+        <p><label>Quantidade de Passageiros:</label> {{ solicitacao.quantidade_passageiros }}</p>
+        <p><label>Local de Embarque:</label> {{ solicitacao.local_embarque }}</p>
+        <p><label>Local de Desembarque:</label> {{ solicitacao.local_desembarque }}</p>
+        <p><label>Itinerário:</label> 
+            {% if solicitacao.itinerario %}
+                <ul>
+                {% for local in solicitacao.itinerario %}
+                    <li>{{ local }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}--{% endif %}
+        </p>
+        <p><label>Veículo:</label> {% if solicitacao.veiculo %}{{ solicitacao.veiculo.placa }} - {{ solicitacao.veiculo.marca }}{% else %}Não atribuído{% endif %}</p>
+        <p><label>Motorista:</label> {% if solicitacao.motorista %}{{ solicitacao.motorista.nome }}{% else %}Não atribuído{% endif %}</p>
+        <p><label>Status:</label> <span class="status-{{ solicitacao.status }}">{{ solicitacao.get_status_display }}</span></p>
+        <p><label>Observação:</label> {% if solicitacao.observacao %}{{ solicitacao.observacao }}{% else %}--{% endif %}</p>
+        <p><label>Data de Criação:</label> {{ solicitacao.data_criacao|date:"d/m/Y H:i" }}</p>
+    </div>
+    
+    <div style="margin-top: 20px;">
+        <a href="{% url 'solicitacao_viagem_list' %}" class="btn btn-back">Voltar</a>
+        <a href="{% url 'solicitacao_viagem_gerenciar' solicitacao.id %}" class="btn btn-edit">Gerenciar</a>
+    </div>
+</div>
+
+<style>
+    .detail p { margin: 10px 0; }
+    .detail label { font-weight: bold; margin-right: 10px; }
+    .detail ul { margin: 5px 0; padding-left: 20px; }
+    .status-Pendente { color: #FF9800; font-weight: bold; }
+    .status-Confirmada { color: #4CAF50; font-weight: bold; }
+    .status-Concluida { color: #2196F3; font-weight: bold; }
+    .status-Cancelada { color: #f44336; font-weight: bold; }
+    .btn { padding: 10px 20px; text-decoration: none; display: inline-block; border-radius: 4px; }
+    .btn-back { background-color: #9E9E9E; color: white; }
+    .btn-edit { background-color: #2196F3; color: white; margin-left: 10px; }
+</style>
+{% endblock %}

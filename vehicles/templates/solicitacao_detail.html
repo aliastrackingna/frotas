@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes da Solicitação - Frotas{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Detalhes da Solicitação</h1>
+    
+    <div class="detail">
+        <p><label>ID:</label> {{ solicitacao.id }}</p>
+        <p><label>Data e Hora de Início:</label> {{ solicitacao.data_inicio|date:"d/m/Y H:i" }}</p>
+        <p><label>Data e Hora Prevista de Retorno:</label> {{ solicitacao.data_fim_prevista|date:"d/m/Y H:i" }}</p>
+        <p><label>Motorista:</label> {% if solicitacao.motorista %}{{ solicitacao.motorista.nome }}{% else %}Não atribuído{% endif %}</p>
+        <p><label>Status:</label> <span class="status-{{ solicitacao.status }}">{{ solicitacao.get_status_display }}</span></p>
+        <p><label>Observação:</label> {% if solicitacao.observacao %}{{ solicitacao.observacao }}{% else %}--{% endif %}</p>
+        <p><label>Data de Criação:</label> {{ solicitacao.data_criacao|date:"d/m/Y H:i" }}</p>
+    </div>
+    
+    <div style="margin-top: 20px;">
+        <a href="{% url 'solicitacao_list' %}" class="btn btn-back">Voltar</a>
+        <a href="{% url 'solicitacao_gerenciar' solicitacao.id %}" class="btn btn-edit">Gerenciar</a>
+    </div>
+</div>
+
+<style>
+    .detail p { margin: 10px 0; }
+    .detail label { font-weight: bold; margin-right: 10px; }
+    .status-Pendente { color: #FF9800; font-weight: bold; }
+    .status-Confirmada { color: #4CAF50; font-weight: bold; }
+    .status-Concluida { color: #2196F3; font-weight: bold; }
+    .status-Cancelada { color: #f44336; font-weight: bold; }
+    .btn { padding: 8px 16px; text-decoration: none; display: inline-block; border-radius: 4px; }
+    .btn-back { background-color: #9E9E9E; color: white; }
+</style>
+{% endblock %}

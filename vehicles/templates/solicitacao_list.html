@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Solicitações de Motorista - Frotas{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>Solicitações de Motorista</h1>
+    <a href="{% url 'solicitacao_create' %}" class="btn btn-primary">Nova Solicitação</a>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Data Início</th>
+            <th>Data Retorno</th>
+            <th>Motorista</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for s in solicitacoes %}
+        <tr>
+            <td>{{ s.id }}</td>
+            <td>{{ s.data_inicio|date:"d/m/Y H:i" }}</td>
+            <td>{{ s.data_fim_prevista|date:"d/m/Y H:i" }}</td>
+            <td>{% if s.motorista %}{{ s.motorista.nome }}{% else %}--{% endif %}</td>
+            <td><span class="status-{{ s.status }}">{{ s.get_status_display }}</span></td>
+            <td>
+                <a href="{% url 'solicitacao_detail' s.id %}" class="btn btn-primary">Ver</a>
+                <a href="{% url 'solicitacao_gerenciar' s.id %}" class="btn btn-edit">Gerenciar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">Nenhuma solicitação cadastrada.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<style>
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    table { border-collapse: collapse; width: 100%; background: white; }
+    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+    th { background-color: #4CAF50; color: white; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
+    tr:hover { background-color: #f1f1f1; }
+    .btn { padding: 6px 12px; margin: 2px; text-decoration: none; display: inline-block; border-radius: 4px; }
+    .btn-primary { background-color: #4CAF50; color: white; }
+    .status-Pendente { color: #FF9800; font-weight: bold; }
+    .status-Confirmada { color: #4CAF50; font-weight: bold; }
+    .status-Concluida { color: #2196F3; font-weight: bold; }
+    .status-Cancelada { color: #f44336; font-weight: bold; }
+</style>
+{% endblock %}

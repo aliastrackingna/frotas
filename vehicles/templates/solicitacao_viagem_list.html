@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Solicitações de Viagem - Frotas{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>Solicitações de Viagem</h1>
+    <a href="{% url 'solicitacao_viagem_create' %}" class="btn btn-primary">Nova Viagem</a>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Data Viagem</th>
+            <th>Retorno</th>
+            <th>Passageiros</th>
+            <th>Embarque</th>
+            <th>Veículo</th>
+            <th>Motorista</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for s in solicitacoes %}
+        <tr>
+            <td>{{ s.id }}</td>
+            <td>{{ s.data_viagem|date:"d/m/Y H:i" }}</td>
+            <td>{{ s.data_fim_prevista|date:"d/m/Y H:i" }}</td>
+            <td>{{ s.quantidade_passageiros }}</td>
+            <td>{{ s.local_embarque }}</td>
+            <td>{% if s.veiculo %}{{ s.veiculo.placa }}{% else %}--{% endif %}</td>
+            <td>{% if s.motorista %}{{ s.motorista.nome }}{% else %}--{% endif %}</td>
+            <td><span class="status-{{ s.status }}">{{ s.get_status_display }}</span></td>
+            <td>
+                <a href="{% url 'solicitacao_viagem_detail' s.id %}" class="btn btn-primary">Ver</a>
+                <a href="{% url 'solicitacao_viagem_gerenciar' s.id %}" class="btn btn-edit">Gerenciar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="9">Nenhuma solicitação de viagem cadastrada.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<style>
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    table { border-collapse: collapse; width: 100%; background: white; }
+    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+    th { background-color: #4CAF50; color: white; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
+    tr:hover { background-color: #f1f1f1; }
+    .btn { padding: 6px 12px; margin: 2px; text-decoration: none; display: inline-block; border-radius: 4px; }
+    .btn-primary { background-color: #4CAF50; color: white; }
+    .btn-edit { background-color: #2196F3; color: white; }
+    .status-Pendente { color: #FF9800; font-weight: bold; }
+    .status-Confirmada { color: #4CAF50; font-weight: bold; }
+    .status-Concluida { color: #2196F3; font-weight: bold; }
+    .status-Cancelada { color: #f44336; font-weight: bold; }
+</style>
+{% endblock %}

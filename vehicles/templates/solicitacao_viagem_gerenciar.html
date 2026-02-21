@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Gerenciar Viagem - Frotas{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Gerenciar Viagem #{{ solicitacao.id }}</h1>
+    
+    <div class="detail">
+        <p><label>Data e Hora da Viagem:</label> {{ solicitacao.data_viagem|date:"d/m/Y H:i" }}</p>
+        <p><label>Data e Hora Prevista de Retorno:</label> {{ solicitacao.data_fim_prevista|date:"d/m/Y H:i" }}</p>
+        <p><label>Quantidade de Passageiros:</label> {{ solicitacao.quantidade_passageiros }}</p>
+        <p><label>Local de Embarque:</label> {{ solicitacao.local_embarque }}</p>
+        <p><label>Local de Desembarque:</label> {{ solicitacao.local_desembarque }}</p>
+        <p><label>Status:</label> <span class="status-{{ solicitacao.status }}">{{ solicitacao.get_status_display }}</span></p>
+        <p><label>Veículo:</label> {% if solicitacao.veiculo %}{{ solicitacao.veiculo.placa }} - {{ solicitacao.veiculo.marca }}{% else %}Não atribuído{% endif %}</p>
+        <p><label>Motorista:</label> {% if solicitacao.motorista %}{{ solicitacao.motorista.nome }}{% else %}Não atribuído{% endif %}</p>
+    </div>
+    
+    <hr style="margin: 20px 0; border: 1px solid #ddd;">
+    
+    <h2>Atribuir Veículo</h2>
+    <form method="post" style="margin-bottom: 20px;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="atribuir_veiculo">
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <select name="veiculo" required style="padding: 10px; flex: 1;">
+                <option value="">Selecione um veículo...</option>
+                {% for v in veiculos %}
+                <option value="{{ v.id_veiculo }}" {% if solicitacao.veiculo_id == v.id_veiculo %}selected{% endif %}>
+                    {{ v.placa }} - {{ v.marca }} ({{ v.quantidade_passageiros }} lugares)
+                </option>
+                {% endfor %}
+            </select>
+            <button type="submit" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Atribuir</button>
+        </div>
+    </form>
+    
+    <hr style="margin: 20px 0; border: 1px solid #ddd;">
+    
+    <h2>Atribuir Motorista</h2>
+    <form method="post" style="margin-bottom: 20px;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="atribuir_motorista">
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <select name="motorista" required style="padding: 10px; flex: 1;">
+                <option value="">Selecione um motorista...</option>
+                {% for m in motoristas %}
+                <option value="{{ m.id_motorista }}" {% if solicitacao.motorista_id == m.id_motorista %}selected{% endif %}>
+                    {{ m.nome }} ({{ m.get_tipo_carteira_display }})
+                </option>
+                {% endfor %}
+            </select>
+            <button type="submit" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Atribuir</button>
+        </div>
+    </form>
+    
+    <hr style="margin: 20px 0; border: 1px solid #ddd;">
+    
+    <h2>Ações</h2>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        {% if solicitacao.status == 'Pendente' %}
+        <form method="post" style="display: inline;">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="confirmar">
+            <button type="submit" style="padding: 10px 20px; background-color: #2196F3; color: white; border: none; cursor: pointer;">Confirmar Sem Veículo/Motorista</button>
+        </form>
+        {% endif %}
+        
+        {% if solicitacao.status != 'Cancelada' and solicitacao.status != 'Concluida' %}
+        <form method="post" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja cancelar esta viagem?');">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="cancelar">
+            <button type="submit" style="padding: 10px 20px; background-color: #f44336; color: white; border: none; cursor: pointer;">Cancelar Viagem</button>
+        </form>
+        
+        <form method="post" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja concluir esta viagem?');">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="concluir">
+            <button type="submit" style="padding: 10px 20px; background-color: #9C27B0; color: white; border: none; cursor: pointer;">Concluir Viagem</button>
+        </form>
+        {% endif %}
+    </div>
+    
+    <div style="margin-top: 30px;">
+        <a href="{% url 'solicitacao_viagem_detail' solicitacao.id %}" class="btn btn-back">Voltar aos Detalhes</a>
+        <a href="{% url 'solicitacao_viagem_list' %}" class="btn btn-back">Voltar à Lista</a>
+    </div>
+</div>
+
+<style>
+    .detail p { margin: 10px 0; }
+    .detail label { font-weight: bold; margin-right: 10px; }
+    .status-Pendente { color: #FF9800; font-weight: bold; }
+    .status-Confirmada { color: #4CAF50; font-weight: bold; }
+    .status-Concluida { color: #2196F3; font-weight: bold; }
+    .status-Cancelada { color: #f44336; font-weight: bold; }
+    .btn { padding: 10px 20px; text-decoration: none; display: inline-block; border-radius: 4px; background-color: #9E9E9E; color: white; }
+</style>
+{% endblock %}
