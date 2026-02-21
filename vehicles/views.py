@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.db import models, transaction
 from django.utils import timezone
-from datetime import datetime
+from datetime import datetime, timedelta
 import random
 from .models import Veiculo, Motorista, SolicitacaoMotorista, SolicitacaoViagem
 
@@ -396,3 +396,80 @@ def solicitacao_viagem_create(request):
                 })
     
     return render(request, 'solicitacao_viagem_form.html', {})
+
+
+def portaria_list(request):
+    from vehicles.models import SolicitacaoViagem, RegistroPortaria
+    from django.utils import timezone
+    
+    hoje = timezone.now().date()
+    amanha = hoje + timedelta(days=1)
+    
+    viagens = SolicitacaoViagem.objects.filter(
+        data_viagem__date__gte=hoje,
+        data_viagem__date__lt=amanha
+    ).order_by('data_viagem')
+    
+    registros = {}
+    for viagem in viagens:
+        try:
+            registros[viagem.id] = viagem.registro_portaria
+        except RegistroPortaria.DoesNotExist:
+            registros[viagem.id] = None
+    
+    return render(request, 'portaria_list.html', {
+        'viagens': viagens,
+        'registros': registros,
+        'data_atual': hoje.strftime('%d/%m/%Y')
+    })
+
+
+def portaria_registrar_saida(request, pk):
+    from vehicles.models import SolicitacaoViagem, RegistroPortaria
+    from django.utils import timezone
+    
+    viagem = get_object_or_404(SolicitacaoViagem, pk=pk)
+    
+    if request.method == 'POST':
+        km_saida = request.POST.get('km_saida')
+        observacao_saida = request.POST.get('observacao_saida', '')
+        
+        registro, created = RegistroPortaria.objects.get_or_create(viagem=viagem)
+        registro.km_saida = int(km_saida) if km_saida else None
+        registro.horario_saida = timezone.now()
+        registro.observacao_saida = observacao_saida
+        registro.save()
+        
+        return redirect('portaria_list')
+    
+    return render(request, 'portaria_registrar.html', {
+        'viagem': viagem,
+        'acao': 'saida'
+    })
+
+
+def portaria_registrar_chegada(request, pk):
+    from vehicles.models import SolicitacaoViagem, RegistroPortaria
+    
+    viagem = get_object_or_404(SolicitacaoViagem, pk=pk)
+    
+    if request.method == 'POST':
+        km_chegada = request.POST.get('km_chegada')
+        observacao_chegada = request.POST.get('observacao_chegada', '')
+        
+        registro = get_object_or_404(RegistroPortaria, viagem=viagem)
+        registro.km_chegada = int(km_chegada) if km_chegada else None
+        registro.horario_chegada = timezone.now()
+        registro.observacao_chegada = observacao_chegada
+        registro.save()
+        
+        if registro.km_chegada and viagem.veiculo:
+            viagem.veiculo.kms_atual = registro.km_chegada
+            viagem.veiculo.save()
+        
+        return redirect('portaria_list')
+    
+    return render(request, 'portaria_registrar.html', {
+        'viagem': viagem,
+        'acao': 'chegada'
+    })

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if acao == 'saida' %}Registrar Saída{% else %}Registrar Chegada{% endif %} - Portaria{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{% if acao == 'saida' %}Registrar Saída{% else %}Registrar Chegada{% endif %}</h1>
+    
+    <div class="detail">
+        <p><label>Viagem:</label> #{{ viagem.id }}</p>
+        <p><label>Horário Previsto:</label> {{ viagem.data_viagem|date:"d/m/Y H:i" }}</p>
+        <p><label>Veículo:</label> {% if viagem.veiculo %}{{ viagem.veiculo.placa }} - {{ viagem.veiculo.marca }}{% else %}--{% endif %}</p>
+        <p><label>Motorista:</label> {% if viagem.motorista %}{{ viagem.motorista.nome }}{% else %}--{% endif %}</p>
+        <p><label>Local de Embarque:</label> {{ viagem.local_embarque }}</p>
+        <p><label>Local de Desembarque:</label> {{ viagem.local_desembarque }}</p>
+    </div>
+    
+    <hr style="margin: 20px 0; border: 1px solid #ddd;">
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 15px;">
+            <label for="km" style="display: block; font-weight: bold; margin-bottom: 5px;">
+                {% if acao == 'saida' %}Km de Saída:{% else %}Km de Chegada:{% endif %}
+            </label>
+            <input type="number" id="km" name="{% if acao == 'saida' %}km_saida{% else %}km_chegada{% endif %}" required min="0" style="width: 100%; padding: 10px;">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label for="observacao" style="display: block; font-weight: bold; margin-bottom: 5px;">Observação:</label>
+            <textarea id="observacao" name="{% if acao == 'saida' %}observacao_saida{% else %}observacao_chegada{% endif %}" rows="3" style="width: 100%; padding: 10px;"></textarea>
+        </div>
+        
+        <button type="submit" style="padding: 12px 24px; background-color: #4CAF50; color: white; border: none; cursor: pointer; font-size: 16px;">
+            {% if acao == 'saida' %}Registrar Saída{% else %}Registrar Chegada{% endif %}
+        </button>
+        <a href="{% url 'portaria_list' %}" style="display:inline-block; padding: 12px 24px; background-color: #9E9E9E; color: white; text-decoration: none; margin-left: 10px;">Cancelar</a>
+    </form>
+</div>
+
+<style>
+    .detail p { margin: 10px 0; }
+    .detail label { font-weight: bold; margin-right: 10px; }
+</style>
+{% endblock %}

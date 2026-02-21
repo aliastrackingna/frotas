@@ -1,6 +1,7 @@
 import pytest
 from django.test import TestCase
-from vehicles.models import Veiculo, Observacao, Motorista, SolicitacaoMotorista, SolicitacaoViagem
+from django.utils import timezone
+from vehicles.models import Veiculo, Observacao, Motorista, SolicitacaoMotorista, SolicitacaoViagem, RegistroPortaria
 from vehicles.tests.fixtures import (
     data_futura, criar_motorista, criar_veiculo,
     criar_solicitacao_motorista, criar_solicitacao_viagem
@@ -169,3 +170,31 @@ class SolicitacaoViagemModelTest(TestCase):
             status='Concluida'
         )
         self.assertEqual(self.veiculo.solicitacoes_viagem.count(), 2)
+
+
+class RegistroPortariaModelTest(TestCase):
+    def setUp(self):
+        self.motorista = criar_motorista("Motorista Portaria", "D")
+        self.veiculo = criar_veiculo("PORT001", "Mercedes-Benz", 44)
+        self.viagem = criar_solicitacao_viagem(
+            veiculo=self.veiculo,
+            motorista=self.motorista,
+            status='Confirmada'
+        )
+
+    def test_criar_registro_portaria(self):
+        registro = RegistroPortaria.objects.create(
+            viagem=self.viagem,
+            km_saida=1000,
+            horario_saida=timezone.now()
+        )
+        self.assertEqual(registro.km_saida, 1000)
+        self.assertEqual(registro.viagem, self.viagem)
+
+    def test_registro_km_chegada_atualiza_veiculo(self):
+        pass
+
+    def test_viagem_tem_registro_portaria(self):
+        RegistroPortaria.objects.create(viagem=self.viagem, km_saida=500)
+        self.assertTrue(hasattr(self.viagem, 'registro_portaria'))
+        self.assertEqual(self.viagem.registro_portaria.km_saida, 500)

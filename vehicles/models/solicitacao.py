@@ -68,3 +68,24 @@ class SolicitacaoViagem(models.Model):
 
     def __str__(self):
         return f"Viagem #{self.id} - {self.data_viagem.strftime('%d/%m/%Y')} - {self.get_status_display()}"
+
+
+class RegistroPortaria(models.Model):
+    viagem = models.OneToOneField(
+        SolicitacaoViagem,
+        on_delete=models.CASCADE,
+        related_name='registro_portaria'
+    )
+    km_saida = models.PositiveIntegerField(null=True, blank=True)
+    km_chegada = models.PositiveIntegerField(null=True, blank=True)
+    horario_saida = models.DateTimeField(null=True, blank=True)
+    horario_chegada = models.DateTimeField(null=True, blank=True)
+    observacao_saida = models.TextField(blank=True, default='')
+    observacao_chegada = models.TextField(blank=True, default='')
+    data_criacao = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-data_criacao']
+
+    def __str__(self):
+        return f"Registro Portaria - Viagem #{self.viagem_id}"
