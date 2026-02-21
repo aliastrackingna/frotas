@@ -76,8 +76,8 @@ def motoristah_list(request):
 
 
 def motoristah_detail(request, pk):
-    motorista = get_object_or_404(Motorista, pk=pk)
-    return render(request, 'motorista_detail.html', {'motorista': motorista})
+    motoristah = get_object_or_404(Motorista, pk=pk)
+    return render(request, 'motorista_detail.html', {'motorista': motoristah})
 
 
 def motoristah_create(request):
