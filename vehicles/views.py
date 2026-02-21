@@ -50,3 +50,12 @@ def veiculo_delete(request, pk):
         veiculo.delete()
         return redirect('veiculo_list')
     return render(request, 'vehicles/veiculo_confirm_delete.html', {'veiculo': veiculo})
+
+
+def observacao_create(request, veiculo_pk):
+    veiculo = get_object_or_404(Veiculo, pk=veiculo_pk)
+    if request.method == 'POST':
+        texto = request.POST.get('texto', '').strip()
+        if texto:
+            veiculo.observacoes.create(texto=texto)
+    return redirect('veiculo_detail', pk=veiculo_pk)

@@ -28,6 +28,13 @@
     </div>
     
     <h2>Observações</h2>
+    
+    <form method="post" action="{% url 'observacao_create' veiculo.id_veiculo %}" style="margin: 15px 0;">
+        {% csrf_token %}
+        <textarea name="texto" rows="3" cols="50" placeholder="Digite uma observação..." required style="width: 100%;"></textarea>
+        <button type="submit" class="btn btn-primary" style="margin-top: 5px;">Adicionar Observação</button>
+    </form>
+    
     <ul>
         {% for obs in veiculo.observacoes.all %}
         <li>{{ obs.texto }} ({{ obs.data_criacao }})</li>
