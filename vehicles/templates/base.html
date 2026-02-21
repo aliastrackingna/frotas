@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Frotas{% endblock %}</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .menu { 
+            background-color: #2c3e50; 
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+        }
+        .menu-brand {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            margin-right: 40px;
+        }
+        .menu a { 
+            color: #ecf0f1; 
+            text-decoration: none; 
+            margin-right: 20px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .menu a:hover { 
+            background-color: #34495e;
+            text-decoration: none;
+        }
+        .content { 
+            padding: 30px; 
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { color: #2c3e50; }
+    </style>
+</head>
+<body>
+    <nav class="menu">
+        <span class="menu-brand">🚚 Frotas</span>
+        <a href="{% url 'index' %}">Início</a>
+        <a href="{% url 'veiculo_list' %}">Veículos</a>
+        <a href="/admin/">Admin</a>
+    </nav>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

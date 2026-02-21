@@ -3,6 +3,11 @@ from django.http import HttpResponse
 from .models import Veiculo
 
 
+def index(request):
+    total_veiculos = Veiculo.objects.count()
+    return render(request, 'index.html', {'total_veiculos': total_veiculos})
+
+
 def veiculo_list(request):
     veiculos = Veiculo.objects.all()
     return render(request, 'vehicles/veiculo_list.html', {'veiculos': veiculos})

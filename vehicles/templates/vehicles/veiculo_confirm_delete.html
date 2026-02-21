@@ -1,28 +1,19 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excluir Veículo</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .alert { background-color: #f44336; color: white; padding: 15px; margin: 20px 0; }
-        button { padding: 10px 20px; border: none; cursor: pointer; margin-right: 10px; }
-        .btn-delete { background-color: #f44336; color: white; }
-        .btn-back { background-color: #9E9E9E; color: white; }
-    </style>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Excluir Veículo - Frotas{% endblock %}
+
+{% block content %}
+<div class="card">
     <h1>Excluir Veículo</h1>
     
-    <div class="alert">
-        <p>Tem certeza que deseja excluir o veículo <strong>{{ veiculo.placa }}</strong> ({{ veiculo.marca }})?</p>
+    <div style="background-color: #ffebee; border-left: 4px solid #f44336; padding: 15px; margin: 20px 0;">
+        <p style="margin: 0;">Tem certeza que deseja excluir o veículo <strong>{{ veiculo.placa }}</strong> ({{ veiculo.marca }})?</p>
     </div>
     
     <form method="post">
         {% csrf_token %}
-        <button type="submit" class="btn-delete">Sim, Excluir</button>
-        <a href="{% url 'veiculo_list' %}" class="btn-back" style="display:inline-block; padding:10px 20px; background-color:#9E9E9E; color:white; text-decoration:none;">Cancelar</a>
+        <button type="submit" style="padding: 12px 24px; background-color: #f44336; color: white; border: none; cursor: pointer; font-size: 16px;">Sim, Excluir</button>
+        <a href="{% url 'veiculo_list' %}" style="display:inline-block; padding: 12px 24px; background-color: #9E9E9E; color: white; text-decoration: none; margin-left: 10px;">Cancelar</a>
     </form>
-</body>
-</html>
+</div>
+{% endblock %}

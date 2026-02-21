@@ -1,61 +1,58 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Veículos - Frotas</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #4CAF50; color: white; }
-        tr:nth-child(even) { background-color: #f2f2f2; }
-        .btn { padding: 5px 10px; margin: 2px; text-decoration: none; display: inline-block; }
-        .btn-primary { background-color: #4CAF50; color: white; }
-        .btn-edit { background-color: #2196F3; color: white; }
-        .btn-delete { background-color: #f44336; color: white; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>Veículos</h1>
-        <a href="{% url 'veiculo_create' %}" class="btn btn-primary">Novo Veículo</a>
-    </div>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Placa</th>
-                <th>Marca</th>
-                <th>Passageiros</th>
-                <th>KM Inicial</th>
-                <th>KM Atual</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for veiculo in veiculos %}
-            <tr>
-                <td>{{ veiculo.id_veiculo }}</td>
-                <td><a href="{% url 'veiculo_detail' veiculo.id_veiculo %}">{{ veiculo.placa }}</a></td>
-                <td>{{ veiculo.marca }}</td>
-                <td>{{ veiculo.quantidade_passageiros }}</td>
-                <td>{{ veiculo.km_inicial }}</td>
-                <td>{{ veiculo.kms_atual }}</td>
-                <td>
-                    <a href="{% url 'veiculo_detail' veiculo.id_veiculo %}" class="btn btn-primary">Ver</a>
-                    <a href="{% url 'veiculo_update' veiculo.id_veiculo %}" class="btn btn-edit">Editar</a>
-                    <a href="{% url 'veiculo_delete' veiculo.id_veiculo %}" class="btn btn-delete">Excluir</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="7">Nenhum veículo cadastrado.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Veículos - Frotas{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>Veículos</h1>
+    <a href="{% url 'veiculo_create' %}" class="btn btn-primary">Novo Veículo</a>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Placa</th>
+            <th>Marca</th>
+            <th>Passageiros</th>
+            <th>KM Inicial</th>
+            <th>KM Atual</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for veiculo in veiculos %}
+        <tr>
+            <td>{{ veiculo.id_veiculo }}</td>
+            <td><a href="{% url 'veiculo_detail' veiculo.id_veiculo %}">{{ veiculo.placa }}</a></td>
+            <td>{{ veiculo.marca }}</td>
+            <td>{{ veiculo.quantidade_passageiros }}</td>
+            <td>{{ veiculo.km_inicial }}</td>
+            <td>{{ veiculo.kms_atual }}</td>
+            <td>
+                <a href="{% url 'veiculo_detail' veiculo.id_veiculo %}" class="btn btn-primary">Ver</a>
+                <a href="{% url 'veiculo_update' veiculo.id_veiculo %}" class="btn btn-edit">Editar</a>
+                <a href="{% url 'veiculo_delete' veiculo.id_veiculo %}" class="btn btn-delete">Excluir</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7">Nenhum veículo cadastrado.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<style>
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    table { border-collapse: collapse; width: 100%; background: white; }
+    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+    th { background-color: #4CAF50; color: white; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
+    tr:hover { background-color: #f1f1f1; }
+    .btn { padding: 6px 12px; margin: 2px; text-decoration: none; display: inline-block; border-radius: 4px; }
+    .btn-primary { background-color: #4CAF50; color: white; }
+    .btn-edit { background-color: #2196F3; color: white; }
+    .btn-delete { background-color: #f44336; color: white; }
+</style>
+{% endblock %}

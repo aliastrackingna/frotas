@@ -1,41 +1,40 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% if veiculo %}Editar{% else %}Novo{% endif %} Veículo</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        form { max-width: 500px; }
-        label { display: block; margin-top: 10px; font-weight: bold; }
-        input { width: 100%; padding: 8px; margin-top: 5px; }
-        button { margin-top: 15px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #45a049; }
-        .btn-back { background-color: #9E9E9E; margin-left: 10px; }
-    </style>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}{% if veiculo %}Editar{% else %}Novo{% endif %} Veículo - Frotas{% endblock %}
+
+{% block content %}
+<div class="card">
     <h1>{% if veiculo %}Editar{% else %}Novo{% endif %} Veículo</h1>
     
     <form method="post">
         {% csrf_token %}
-        <label for="placa">Placa:</label>
-        <input type="text" id="placa" name="placa" value="{{ veiculo.placa|default:'' }}" required maxlength="7">
+        <div style="margin-bottom: 15px;">
+            <label for="placa" style="display: block; font-weight: bold; margin-bottom: 5px;">Placa:</label>
+            <input type="text" id="placa" name="placa" value="{{ veiculo.placa|default:'' }}" required maxlength="7" style="width: 100%; padding: 10px;">
+        </div>
         
-        <label for="marca">Marca:</label>
-        <input type="text" id="marca" name="marca" value="{{ veiculo.marca|default:'' }}" required maxlength="50">
+        <div style="margin-bottom: 15px;">
+            <label for="marca" style="display: block; font-weight: bold; margin-bottom: 5px;">Marca:</label>
+            <input type="text" id="marca" name="marca" value="{{ veiculo.marca|default:'' }}" required maxlength="50" style="width: 100%; padding: 10px;">
+        </div>
         
-        <label for="quantidade_passageiros">Quantidade de Passageiros:</label>
-        <input type="number" id="quantidade_passageiros" name="quantidade_passageiros" value="{{ veiculo.quantidade_passageiros|default:'' }}" required min="1">
+        <div style="margin-bottom: 15px;">
+            <label for="quantidade_passageiros" style="display: block; font-weight: bold; margin-bottom: 5px;">Quantidade de Passageiros:</label>
+            <input type="number" id="quantidade_passageiros" name="quantidade_passageiros" value="{{ veiculo.quantidade_passageiros|default:'' }}" required min="1" style="width: 100%; padding: 10px;">
+        </div>
         
-        <label for="km_inicial">KM Inicial:</label>
-        <input type="number" id="km_inicial" name="km_inicial" value="{{ veiculo.km_inicial|default:'0' }}" min="0">
+        <div style="margin-bottom: 15px;">
+            <label for="km_inicial" style="display: block; font-weight: bold; margin-bottom: 5px;">KM Inicial:</label>
+            <input type="number" id="km_inicial" name="km_inicial" value="{{ veiculo.km_inicial|default:'0' }}" min="0" style="width: 100%; padding: 10px;">
+        </div>
         
-        <label for="kms_atual">KM Atual:</label>
-        <input type="number" id="kms_atual" name="kms_atual" value="{{ veiculo.kms_atual|default:'0' }}" min="0">
+        <div style="margin-bottom: 15px;">
+            <label for="kms_atual" style="display: block; font-weight: bold; margin-bottom: 5px;">KM Atual:</label>
+            <input type="number" id="kms_atual" name="kms_atual" value="{{ veiculo.kms_atual|default:'0' }}" min="0" style="width: 100%; padding: 10px;">
+        </div>
         
-        <button type="submit">Salvar</button>
-        <a href="{% url 'veiculo_list' %}" class="btn-back" style="display:inline-block; padding:10px 20px; background-color:#9E9E9E; color:white; text-decoration:none; margin-left:10px;">Cancelar</a>
+        <button type="submit" style="padding: 12px 24px; background-color: #4CAF50; color: white; border: none; cursor: pointer; font-size: 16px;">Salvar</button>
+        <a href="{% url 'veiculo_list' %}" style="display:inline-block; padding: 12px 24px; background-color: #9E9E9E; color: white; text-decoration: none; margin-left: 10px;">Cancelar</a>
     </form>
-</body>
-</html>
+</div>
+{% endblock %}
