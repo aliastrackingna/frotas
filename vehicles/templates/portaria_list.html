@@ -11,11 +11,12 @@
 <table>
     <thead>
         <tr>
-            <th>Horário</th>
+            <th>Previsão de Saída</th>
             <th>Km Saída</th>
-            <th>Saída</th>
+            <th>Saída Real</th>
             <th>Km Chegada</th>
-            <th>Chegada</th>
+            <th>Previsão de Chegada</th>
+            <th>Chegada Real</th>
             <th>Veículo</th>
             <th>Motorista</th>
             <th>Locais</th>
@@ -25,11 +26,12 @@
     <tbody>
         {% for viagem, registro in viagens_registros %}
         <tr>
-            <td>{{ viagem.data_viagem|time:"H:i" }} - {{ viagem.data_fim_prevista|time:"H:i" }}</td>
+            <td>{{ viagem.data_viagem|date:"d-m-y H:i" }}</td>
             <td>{% if registro %}{{ registro.km_saida|default:"--" }}{% else %}--{% endif %}</td>
-            <td>{% if registro and registro.horario_saida %}{{ registro.horario_saida|time:"H:i" }}{% else %}--{% endif %}</td>
+            <td>{% if registro and registro.horario_saida %}{{ registro.horario_saida|date:"d-m-y H:i" }}{% else %}--{% endif %}</td>
             <td>{% if registro %}{{ registro.km_chegada|default:"--" }}{% else %}--{% endif %}</td>
-            <td>{% if registro and registro.horario_chegada %}{{ registro.horario_chegada|time:"H:i" }}{% else %}--{% endif %}</td>
+            <td>{{ viagem.data_fim_prevista|date:"d-m-y H:i" }}</td>
+            <td>{% if registro and registro.horario_chegada %}{{ registro.horario_chegada|date:"d-m-y H:i" }}{% else %}--{% endif %}</td>
             <td>{% if viagem.veiculo %}{{ viagem.veiculo.placa }} - {{ viagem.veiculo.marca }}{% else %}--{% endif %}</td>
             <td>{% if viagem.motorista %}{{ viagem.motorista.nome }}{% else %}--{% endif %}</td>
             <td>

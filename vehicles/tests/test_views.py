@@ -158,6 +158,39 @@ class SolicitacaoMotoristaViewTest(TestCase):
         solicitacao.refresh_from_db()
         self.assertEqual(solicitacao.status, 'Concluida')
 
+    def test_agendar_mesmo_motorista_maneira_e_tarde_mesmo_dia(self):
+        from datetime import datetime
+        
+        dia_futuro = (timezone.now() + timedelta(days=1)).date()
+        
+        manha_inicio = timezone.make_aware(datetime.combine(dia_futuro, datetime.min.time().replace(hour=8)))
+        manha_fim = timezone.make_aware(datetime.combine(dia_futuro, datetime.min.time().replace(hour=12)))
+        
+        tarde_inicio = timezone.make_aware(datetime.combine(dia_futuro, datetime.min.time().replace(hour=14)))
+        tarde_fim = timezone.make_aware(datetime.combine(dia_futuro, datetime.min.time().replace(hour=18)))
+        
+        response1 = self.client.post(reverse('solicitacao_create'), {
+            'data_inicio': manha_inicio.strftime('%Y-%m-%dT%H:%M'),
+            'data_fim_prevista': manha_fim.strftime('%Y-%m-%dT%H:%M'),
+            'observacao': 'Viagem de manhã'
+        })
+        self.assertEqual(response1.status_code, 302)
+        solicitacao_manha = SolicitacaoMotorista.objects.get(observacao='Viagem de manhã')
+        self.assertEqual(solicitacao_manha.motorista, self.motorista)
+        self.assertEqual(solicitacao_manha.status, 'Confirmada')
+        
+        response2 = self.client.post(reverse('solicitacao_create'), {
+            'data_inicio': tarde_inicio.strftime('%Y-%m-%dT%H:%M'),
+            'data_fim_prevista': tarde_fim.strftime('%Y-%m-%dT%H:%M'),
+            'observacao': 'Viagem de tarde'
+        })
+        self.assertEqual(response2.status_code, 302)
+        solicitacao_tarde = SolicitacaoMotorista.objects.get(observacao='Viagem de tarde')
+        self.assertEqual(solicitacao_tarde.motorista, self.motorista)
+        self.assertEqual(solicitacao_tarde.status, 'Confirmada')
+        
+        self.assertEqual(SolicitacaoMotorista.objects.count(), 2)
+
 
 class SolicitacaoViagemViewTest(TestCase):
     def setUp(self):

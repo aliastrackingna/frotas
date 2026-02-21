@@ -51,7 +51,7 @@ def solicitacao_create(request):
         error = _validar_datas(data_inicio, data_fim)
         if error:
             return render(request, 'solicitacao_form.html', {'error': error})
-        
+
         with transaction.atomic():
             solicitacao = SolicitacaoMotorista.objects.create(
                 data_inicio=data_inicio,
