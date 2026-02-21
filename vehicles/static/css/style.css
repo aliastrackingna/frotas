@@ -119,5 +119,8 @@ form { display: inline; }
 .filter-shortcuts { margin-top: 10px; display: flex; align-items: center; gap: 10px; font-size: 14px; }
 .btn-sm { padding: 4px 10px; font-size: 12px; }
 
+tr.row-pendente { background-color: #fff3e0; }
+tr.row-pendente:hover { background-color: #ffe0b2; }
+
 select { padding: 10px; }
 button { cursor: pointer; }

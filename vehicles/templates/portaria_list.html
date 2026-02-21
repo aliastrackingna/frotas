@@ -25,7 +25,7 @@
     </thead>
     <tbody>
         {% for viagem, registro in viagens_registros %}
-        <tr>
+        <tr{% if not registro or not registro.horario_chegada %} class="row-pendente"{% endif %}>
             <td>{{ viagem.data_viagem|date:"d-m-y H:i" }}</td>
             <td>{% if registro %}{{ registro.km_saida|default:"--" }}{% else %}--{% endif %}</td>
             <td>{% if registro and registro.horario_saida %}{{ registro.horario_saida|date:"d-m-y H:i" }}{% else %}--{% endif %}</td>
