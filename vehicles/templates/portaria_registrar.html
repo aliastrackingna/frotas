@@ -3,40 +3,119 @@
 {% block title %}{% if acao == 'saida' %}Registrar Saída{% else %}Registrar Chegada{% endif %} - Portaria{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h1>{% if acao == 'saida' %}Registrar Saída{% else %}Registrar Chegada{% endif %}</h1>
-    
-    <div class="detail">
-        <p><label>Viagem:</label> #{{ viagem.id }}</p>
-        <p><label>Horário Previsto:</label> {{ viagem.data_viagem|date:"d/m/Y H:i" }}</p>
-        <p><label>Veículo:</label> {% if viagem.veiculo %}{{ viagem.veiculo.placa }} - {{ viagem.veiculo.marca }}{% else %}--{% endif %}</p>
-        <p><label>Motorista:</label> {% if viagem.motorista %}{{ viagem.motorista.nome }}{% else %}--{% endif %}</p>
-        <p><label>Local de Embarque:</label> {{ viagem.local_embarque }}</p>
-        <p><label>Local de Desembarque:</label> {{ viagem.local_desembarque }}</p>
+<div class="header">
+    <h1>{% if acao == 'saida' %}🚀 Registrar Saída{% else %}✅ Registrar Chegada{% endif %}</h1>
+    <a href="{% url 'portaria_list' %}" class="btn btn-back">← Voltar à Portaria</a>
+</div>
+
+<div class="trip-card" style="max-width: 700px; margin: 0 auto; background: #fff; color: #1e293b;">
+    <div class="trip-header" style="background: #f1f5f9; border-bottom: 1px solid #e2e8f0;">
+        <div class="trip-dates" style="color: #1e293b;">
+            {{ viagem.data_viagem|date:"d/m" }} - {{ viagem.data_fim_prevista|date:"d/m" }}
+        </div>
+        <div class="trip-status" style="color: #64748b;">
+            {% if acao == 'saida' %}⏳ Aguardando Saída{% else %}🚀 Em Andamento{% endif %}
+        </div>
     </div>
     
-    <hr class="divider">
+    <div class="trip-body">
+        <div class="trip-info">
+            <span class="info-icon">🚐</span>
+            <span style="color: #1e293b;">{% if viagem.veiculo %}{{ viagem.veiculo.marca }} {{ viagem.veiculo.placa }} ({{ viagem.veiculo.quantidade_passageiros }} lug.){% else %}Sem veículo{% endif %}</span>
+        </div>
+        <div class="trip-info">
+            <span class="info-icon">👤</span>
+            <span style="color: #1e293b;">{% if viagem.motorista %}{{ viagem.motorista.nome }} (CNH {{ viagem.motorista.tipo_carteira }}){% else %}Sem motorista{% endif %}</span>
+        </div>
+        <div class="trip-info">
+            <span class="info-icon">📍</span>
+            <span style="color: #1e293b;">{{ viagem.local_embarque }} → {{ viagem.local_desembarque }}</span>
+        </div>
+        <div class="trip-info">
+            <span class="info-icon">👥</span>
+            <span style="color: #1e293b;">{{ viagem.quantidade_passageiros }} passageiros</span>
+        </div>
+    </div>
+    
+    {% if acao == 'chegada' and registro %}
+    <div class="trip-details" style="border-top: 1px solid #e2e8f0;">
+        <div class="detail-item">
+            <span class="detail-label" style="color: #64748b;">🕐 Saída Registrada:</span>
+            <span style="color: #1e293b;">{{ registro.horario_saida|date:"d/m H:i" }}</span>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label" style="color: #64748b;">📏 KM de Saída:</span>
+            <span style="color: #1e293b; font-weight: 600;">{{ registro.km_saida|default:"--" }}</span>
+        </div>
+        {% if registro.observacao_saida %}
+        <div class="detail-item">
+            <span class="detail-label" style="color: #64748b;">📝 Obs. Saída:</span>
+            <span style="color: #1e293b;">{{ registro.observacao_saida }}</span>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+    
+    <hr class="divider" style="margin: 20px 0; border-color: #e2e8f0;">
+    
+    {% if erro %}
+    <div class="alert alert-danger" style="margin-bottom: 20px; padding: 12px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #dc2626;">
+        ⚠️ {{ erro }}
+    </div>
+    {% endif %}
     
     <form method="post">
         {% csrf_token %}
         
-        <div class="form-group">
-            <label for="km">
-                {% if acao == 'saida' %}Km de Saída:{% else %}Km de Chegada:{% endif %}
+        <div class="form-group" style="margin-bottom: 16px;">
+            <label for="km" style="display: block; margin-bottom: 6px; font-weight: 600; color: #374151;">
+                {% if acao == 'saida' %}📏 KM de Saída:{% else %}📏 KM de Chegada:{% endif %}
             </label>
-            <input type="number" id="km" name="{% if acao == 'saida' %}km_saida{% else %}km_chegada{% endif %}" required min="0">
+            <input type="number" 
+                   id="km" 
+                   name="{% if acao == 'saida' %}km_saida{% else %}km_chegada{% endif %}" 
+                   required 
+                   min="0"
+                   {% if acao == 'chegada' and registro and registro.km_saida %}min="{{ registro.km_saida }}"{% endif %}
+                   style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #d1d5db; background: #fff; color: #1e293b; font-size: 16px;">
+            {% if acao == 'chegada' and registro and registro.km_saida %}
+            <small style="color: #6b7280; font-size: 12px;">KM mínimo: {{ registro.km_saida }}</small>
+            {% endif %}
         </div>
         
-        <div class="form-group">
-            <label for="observacao">Observação:</label>
-            <textarea id="observacao" name="{% if acao == 'saida' %}observacao_saida{% else %}observacao_chegada{% endif %}" rows="3"></textarea>
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="observacao" style="display: block; margin-bottom: 6px; font-weight: 600; color: #374151;">
+                📝 Observação:
+            </label>
+            <textarea id="observacao" 
+                      name="{% if acao == 'saida' %}observacao_saida{% else %}observacao_chegada{% endif %}" 
+                      rows="3"
+                      style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #d1d5db; background: #fff; color: #1e293b; font-size: 14px; resize: vertical;"></textarea>
         </div>
         
-        <button type="submit" class="btn btn-primary">
-            {% if acao == 'saida' %}Registrar Saída{% else %}Registrar Chegada{% endif %}
-        </button>
-        <a href="{% url 'portaria_list' %}" class="btn btn-back">Cancelar</a>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button type="submit" class="btn {% if acao == 'saida' %}btn-warning{% else %}btn-success{% endif %}" style="flex: 1; padding: 12px 24px; font-size: 16px; font-weight: 600;">
+                {% if acao == 'saida' %}🚀 Registrar Saída{% else %}✅ Registrar Chegada{% endif %}
+            </button>
+            <a href="{% url 'portaria_list' %}" class="btn btn-back" style="padding: 12px 24px; font-size: 16px;">
+                Cancelar
+            </a>
+        </div>
     </form>
 </div>
+
+{% if acao == 'chegada' and registro and registro.km_saida %}
+<script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+        var kmInput = document.getElementById('km');
+        var kmMinimo = {{ registro.km_saida }};
+        if (kmInput.value && parseInt(kmInput.value) < kmMinimo) {
+            e.preventDefault();
+            alert('KM de chegada não pode ser menor que ' + kmMinimo);
+            kmInput.focus();
+        }
+    });
+</script>
+{% endif %}
 
 {% endblock %}

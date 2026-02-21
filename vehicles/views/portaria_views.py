@@ -78,24 +78,34 @@ def portaria_registrar_saida(request, pk):
 
 def portaria_registrar_chegada(request, pk):
     viagem = get_object_or_404(SolicitacaoViagem, pk=pk)
+    registro = get_object_or_404(RegistroPortaria, viagem=viagem)
+    erro = None
     
     if request.method == 'POST':
         km_chegada = request.POST.get('km_chegada')
         observacao_chegada = request.POST.get('observacao_chegada', '')
         
-        registro = get_object_or_404(RegistroPortaria, viagem=viagem)
-        registro.km_chegada = int(km_chegada) if km_chegada else None
-        registro.horario_chegada = timezone.now()
-        registro.observacao_chegada = observacao_chegada
-        registro.save()
-        
-        if registro.km_chegada and viagem.veiculo:
-            viagem.veiculo.kms_atual = registro.km_chegada
-            viagem.veiculo.save()
-        
-        return redirect('portaria_list')
+        if km_chegada:
+            km_chegada = int(km_chegada)
+            if registro.km_saida and km_chegada < registro.km_saida:
+                erro = f'KM de chegada ({km_chegada}) não pode ser menor que KM de saída ({registro.km_saida})'
+            else:
+                registro.km_chegada = km_chegada
+                registro.horario_chegada = timezone.now()
+                registro.observacao_chegada = observacao_chegada
+                registro.save()
+                
+                if registro.km_chegada and viagem.veiculo:
+                    viagem.veiculo.kms_atual = registro.km_chegada
+                    viagem.veiculo.save()
+                
+                return redirect('portaria_list')
+        else:
+            erro = 'KM de chegada é obrigatório'
     
     return render(request, 'portaria_registrar.html', {
         'viagem': viagem,
-        'acao': 'chegada'
+        'acao': 'chegada',
+        'registro': registro,
+        'erro': erro
     })
