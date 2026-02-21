@@ -89,7 +89,7 @@ def get_veiculos_disponiveis(data_inicio, data_fim, quantidade_passageiros):
     ).exclude(veiculo__isnull=True).values_list('veiculo_id', flat=True)
     return Veiculo.objects.exclude(id_veiculo__in=ocupados).filter(
         quantidade_passageiros__gte=quantidade_passageiros
-    )
+    ).order_by('quantidade_passageiros')
 
 
 def _parse_datetime(date_str):
@@ -325,12 +325,13 @@ def solicitacao_viagem_create(request):
             return render(request, 'solicitacao_viagem_form.html', {'error': error})
         
         itinerario = [loc.strip() for loc in request.POST.getlist('itinerario[]') if loc.strip()]
+        quantidade_passageiros = int(request.POST.get('quantidade_passageiros', 1))
         
         with transaction.atomic():
             solicitacao = SolicitacaoViagem.objects.create(
                 data_viagem=data_viagem,
                 data_fim_prevista=data_fim,
-                quantidade_passageiros=request.POST.get('quantidade_passageiros'),
+                quantidade_passageiros=quantidade_passageiros,
                 local_embarque=request.POST.get('local_embarque'),
                 local_desembarque=request.POST.get('local_desembarque'),
                 itinerario=itinerario,
@@ -338,7 +339,7 @@ def solicitacao_viagem_create(request):
                 status='Pendente'
             )
             
-            veiculos_disp = get_veiculos_disponiveis(data_viagem, data_fim, solicitacao.quantidade_passageiros)
+            veiculos_disp = get_veiculos_disponiveis(data_viagem, data_fim, quantidade_passageiros)
             lista_veiculos = list(veiculos_disp)
             
             motoristas_disp = get_motoristas_disponiveis_viagem(data_viagem, data_fim)
@@ -346,10 +347,23 @@ def solicitacao_viagem_create(request):
             
             if lista_veiculos and lista_motoristas:
                 random.seed()
-                solicitacao.veiculo = random.choice(lista_veiculos)
+                solicitacao.veiculo = lista_veiculos[0]
                 solicitacao.motorista = random.choice(lista_motoristas)
-                solicitacao.status = 'Confirmada'
-                solicitacao.save()
+
+                capacidade = solicitacao.veiculo.quantidade_passageiros
+                
+                if quantidade_passageiros > capacidade:
+                    solicitacao.status = 'Cancelada'
+                    solicitacao.observacao = 'Não temos veículos para atender a demanda'
+                    solicitacao.save()
+                elif (quantidade_passageiros + 3) > capacidade:
+                    solicitacao.status = 'Pendente'
+                    solicitacao.observacao = 'Veículo disponível com a capacidade maior do que o solicitado, esperando autorização do coordenador'
+                    solicitacao.save()
+                else:
+                    solicitacao.status = 'Confirmada'
+                    solicitacao.save()
+                
                 return redirect('solicitacao_viagem_detail', pk=solicitacao.pk)
             else:
                 errors = []

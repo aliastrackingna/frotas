@@ -22,7 +22,7 @@
                 </ul>
             {% else %}--{% endif %}
         </p>
-        <p><label>Veículo:</label> {% if solicitacao.veiculo %}{{ solicitacao.veiculo.placa }} - {{ solicitacao.veiculo.marca }}{% else %}Não atribuído{% endif %}</p>
+        <p><label>Veículo:</label> {% if solicitacao.veiculo %}{{ solicitacao.veiculo.placa }} - {{ solicitacao.veiculo.marca }} ({{ solicitacao.veiculo.quantidade_passageiros }}){% else %}Não atribuído{% endif %}</p>
         <p><label>Motorista:</label> {% if solicitacao.motorista %}{{ solicitacao.motorista.nome }}{% else %}Não atribuído{% endif %}</p>
         <p><label>Status:</label> <span class="status-{{ solicitacao.status }}">{{ solicitacao.get_status_display }}</span></p>
         <p><label>Observação:</label> {% if solicitacao.observacao %}{{ solicitacao.observacao }}{% else %}--{% endif %}</p>
