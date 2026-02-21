@@ -8,21 +8,22 @@ def portaria_list(request):
     hoje = timezone.now().date()
     amanha = hoje + timedelta(days=1)
     
-    viagens = SolicitacaoViagem.objects.filter(
+    todas_viagens = SolicitacaoViagem.objects.filter(
         data_viagem__date__gte=hoje,
         data_viagem__date__lt=amanha
     ).order_by('data_viagem')
     
-    viagens_registros = []
+    concluidas = []
     pendentes = []
-    for v in viagens:
+    
+    for v in todas_viagens:
         try:
             registro = v.registro_portaria
         except RegistroPortaria.DoesNotExist:
             registro = None
         
         if registro and registro.horario_chegada:
-            viagens_registros.append((v, registro))
+            concluidas.append((v, registro))
         else:
             pendentes.append((v, registro))
     
@@ -39,10 +40,17 @@ def portaria_list(request):
             registro = None
         pendentes.append((v, registro))
     
-    viagens_registros.extend(pendentes)
+    stats = {
+        'total': len(concluidas) + len(pendentes),
+        'saidas': len([p for p in pendentes if p[1] and p[1].horario_saida]) + len([c for c in concluidas if c[1] and c[1].horario_saida]),
+        'chegadas': len(concluidas),
+        'pendentes': len(pendentes)
+    }
     
     return render(request, 'portaria_list.html', {
-        'viagens_registros': viagens_registros,
+        'concluidas': concluidas,
+        'pendentes': pendentes,
+        'stats': stats,
         'data_atual': hoje.strftime('%d/%m/%Y')
     })
 

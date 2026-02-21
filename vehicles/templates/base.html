@@ -10,15 +10,39 @@
 <body>
     <nav class="menu">
         <span class="menu-brand">🚚 Frotas</span>
-        <a href="{% url 'index' %}">Início</a>
-        <a href="{% url 'veiculo_list' %}">Veículos</a>
-        <a href="{% url 'motorista_list' %}">Motoristas</a>
-        <a href="{% url 'solicitacao_list' %}">Solicitações</a>
-        <a href="{% url 'solicitacao_create' %}">Agendar Motorista</a>
-        <a href="{% url 'solicitacao_viagem_list' %}">Solicitações de Viagem</a>
-        <a href="{% url 'solicitacao_viagem_create' %}">Nova Viagem</a>
-        <a href="{% url 'portaria_list' %}">Portaria</a>
-        <a href="/admin/">Admin</a>
+        <div class="menu-items">
+            <a href="{% url 'index' %}" class="menu-item">Início</a>
+            <div class="menu-dropdown">
+                <span class="menu-item">Veículos ▾</span>
+                <div class="dropdown-content">
+                    <a href="{% url 'veiculo_list' %}">Listar</a>
+                    <a href="{% url 'veiculo_create' %}">Cadastrar</a>
+                </div>
+            </div>
+            <div class="menu-dropdown">
+                <span class="menu-item">Motoristas ▾</span>
+                <div class="dropdown-content">
+                    <a href="{% url 'motorista_list' %}">Listar</a>
+                    <a href="{% url 'motorista_create' %}">Cadastrar</a>
+                </div>
+            </div>
+            <div class="menu-dropdown">
+                <span class="menu-item">Viagens ▾</span>
+                <div class="dropdown-content">
+                    <a href="{% url 'solicitacao_viagem_list' %}">Solicitações</a>
+                    <a href="{% url 'solicitacao_viagem_create' %}">Nova Viagem</a>
+                    <a href="{% url 'solicitacao_list' %}">Motoristas</a>
+                    <a href="{% url 'solicitacao_create' %}">Agendar Motorista</a>
+                </div>
+            </div>
+            <a href="{% url 'portaria_list' %}" class="menu-item">Portaria</a>
+            <div class="menu-dropdown">
+                <span class="menu-item">+Mais ▾</span>
+                <div class="dropdown-content">
+                    <a href="/admin/">Admin</a>
+                </div>
+            </div>
+        </div>
     </nav>
     <div class="content">
         {% block content %}{% endblock %}

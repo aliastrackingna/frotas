@@ -7,27 +7,64 @@ body {
 }
 .menu { 
     background-color: #2c3e50; 
-    padding: 15px 20px;
+    padding: 0 20px;
     display: flex;
     align-items: center;
+    height: 56px;
 }
 .menu-brand {
     color: white;
     font-size: 20px;
     font-weight: bold;
-    margin-right: 40px;
+    margin-right: 30px;
+    white-space: nowrap;
 }
-.menu a { 
+.menu-items {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+.menu-item { 
     color: #ecf0f1; 
     text-decoration: none; 
-    margin-right: 20px;
     padding: 8px 12px;
     border-radius: 4px;
     transition: background-color 0.3s;
+    cursor: pointer;
+    white-space: nowrap;
 }
-.menu a:hover { 
+.menu a.menu-item:hover { 
     background-color: #34495e;
     text-decoration: none;
+}
+.menu-dropdown {
+    position: relative;
+}
+.menu-dropdown:hover .dropdown-content {
+    display: block;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #2c3e50;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    border-radius: 4px;
+    z-index: 1000;
+}
+.dropdown-content a {
+    color: #ecf0f1;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    border-radius: 0;
+    margin: 0;
+}
+.dropdown-content a:hover {
+    background-color: #34495e;
 }
 .content { 
     padding: 30px; 
@@ -121,6 +158,193 @@ form { display: inline; }
 
 tr.row-pendente { background-color: #fff3e0; }
 tr.row-pendente:hover { background-color: #ffe0b2; }
+
+.header-date {
+    font-size: 24px;
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-left: 4px solid #4CAF50;
+}
+
+.stat-card-pendente {
+    border-left-color: #FF9800;
+}
+
+.stat-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    font-size: 36px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin-top: 4px;
+}
+
+.trip-section {
+    margin-bottom: 30px;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+}
+
+.section-title-pendente {
+    color: #FF9800;
+}
+
+.section-title-concluido {
+    color: #4CAF50;
+}
+
+.badge {
+    background: #eee;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.trip-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 15px;
+}
+
+.trip-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-left: 4px solid #ddd;
+}
+
+.trip-card-pendente {
+    border-left-color: #FF9800;
+    background: #fffbf5;
+}
+
+.trip-card-concluido {
+    border-left-color: #4CAF50;
+    opacity: 0.85;
+}
+
+.trip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.trip-dates {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.trip-status {
+    font-size: 14px;
+    font-weight: 500;
+    color: #FF9800;
+}
+
+.trip-status-concluido {
+    color: #4CAF50;
+}
+
+.trip-body {
+    margin-bottom: 15px;
+}
+
+.trip-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #555;
+}
+
+.info-icon {
+    font-size: 16px;
+    width: 24px;
+    text-align: center;
+}
+
+.trip-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.trip-concluido {
+    color: #4CAF50;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.trip-details {
+    display: flex;
+    gap: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    font-size: 13px;
+    color: #666;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.detail-label {
+    font-weight: 500;
+    color: #999;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+}
+
+.empty-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+}
 
 select { padding: 10px; }
 button { cursor: pointer; }
