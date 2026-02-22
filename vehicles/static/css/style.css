@@ -315,7 +315,9 @@ tr.row-pendente:hover { background-color: #ffe0b2; }
 
 .trip-details {
     display: flex;
-    gap: 20px;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
     padding-top: 15px;
     border-top: 1px solid #eee;
     font-size: 13px;
@@ -325,18 +327,36 @@ tr.row-pendente:hover { background-color: #ffe0b2; }
 .detail-item {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
+    flex: 1;
 }
 
 .detail-label {
-    font-weight: 500;
-    color: #555;
+    font-weight: 600;
+    color: #7c8c8d;
     font-size: 11px;
     text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
 }
 
-.trip-info span:last-child {
+.detail-value {
     color: #333;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.km-item {
+    gap: 6px;
+}
+
+.km-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .km-value {

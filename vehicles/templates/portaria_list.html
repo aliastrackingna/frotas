@@ -72,26 +72,35 @@
                 </div>
             </div>
              
-            <div class="trip-details">
-                <div class="detail-item">
-                    <span class="detail-label">↗️ Saída:</span>
-                    <span>{% if registro.horario_saida %}{{ registro.horario_saida|date:"d/m H:i" }}{% else %}--{% endif %}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">📥 Chegada:</span>
-                    <span>{% if registro.horario_chegada %}{{ registro.horario_chegada|date:"d/m H:i" }}{% else %}--{% endif %}</span>
-                </div>
-                <div class="detail-item" style="flex-direction: column; gap: 4px;">
-                    <div>
-                        <span class="detail-label">Km Saída: </span>
-                        <span class="km-value">{% if registro.km_saida %}{{ registro.km_saida|floatformat:"0" }}{% else %}--{% endif %}</span>
-                    </div>
-                    <div>
-                        <span class="detail-label">Km Chegada: </span>
-                        <span class="km-value">{% if registro.km_chegada %}{{ registro.km_chegada|floatformat:"0" }}{% else %}--{% endif %}</span>
-                    </div>
-                </div>
-            </div>
+<div class="trip-details">
+    <div class="detail-item">
+        <span class="detail-label">↗️ Saída</span>
+        <span class="detail-value">
+            {% if registro.horario_saida %}{{ registro.horario_saida|date:"d/m H:i" }}{% else %}--{% endif %}
+        </span>
+    </div>
+
+    <div class="detail-item">
+        <span class="detail-label">📥 Chegada</span>
+        <span class="detail-value">
+            {% if registro.horario_chegada %}{{ registro.horario_chegada|date:"d/m H:i" }}{% else %}--{% endif %}
+        </span>
+    </div>
+
+    <div class="detail-item km-item">
+        <div class="km-row">
+            <span class="detail-label">Km S:</span>
+            <span class="km-value">{% if registro.km_saida %}{{ registro.km_saida|floatformat:"0" }}{% else %}--{% endif %}</span>
+        </div>
+        <div class="km-row">
+            <span class="detail-label">Km C:</span>
+            <span class="km-value">
+                {% if registro.km_chegada %}{{ registro.km_chegada|floatformat:"0" }}{% else %}--{% endif %}
+            </span>
+        </div>
+    </div>
+</div>
+
             
             <div class="trip-actions">
                 {% if not registro or not registro.horario_saida %}
@@ -145,26 +154,33 @@
             </div>
             
             <div class="trip-details">
-                <div class="detail-item">
-                    <span class="detail-label">↗️ Saída:</span>
-                    <span>{{ registro.horario_saida|date:"d/m H:i" }}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">📥 Chegada:</span>
-                    <span>{{ registro.horario_chegada|date:"d/m H:i" }}</span>
-                </div>
-                <div class="detail-item" style="flex-direction: column; gap: 4px;">
-                    <div>
-                        <span class="detail-label">Km Saída: </span>
-                        <span class="km-value">{{ registro.km_saida|floatformat:"0" }}</span>
-                    </div>
-                    <div>
-                        <span class="detail-label">Km Chegada: </span>
-                        <span class="km-value">{{ registro.km_chegada|floatformat:"0" }}</span>
-                    </div>
-                </div>
-            </div>
+    <div class="detail-item">
+        <span class="detail-label">↗️ Saída</span>
+        <span class="detail-value">
+            {% if registro.horario_saida %}{{ registro.horario_saida|date:"d/m H:i" }}{% else %}--{% endif %}
+        </span>
+    </div>
+    
+    <div class="detail-item">
+        <span class="detail-label">📥 Chegada</span>
+        <span class="detail-value">
+            {% if registro.horario_chegada %}{{ registro.horario_chegada|date:"d/m H:i" }}{% else %}--{% endif %}
+        </span>
+    </div>
+    
+    <div class="detail-item km-item">
+        <div class="km-row">
+            <span class="detail-label">Km S:</span>
+            <span class="km-value">{% if registro.km_saida %}{{ registro.km_saida|floatformat:"0" }}{% else %}--{% endif %}</span>
         </div>
+        <div class="km-row">
+            <span class="detail-label">Km C:</span>
+            <span class="km-value">{% if registro.km_chegada %}{{ registro.km_chegada|floatformat:"0" }}{% else %}--{% endif %}</span>
+        </div>
+    </div>
+</div>
+        </div>
+        
         {% endfor %}
     </div>
 </section>
