@@ -1,12 +1,35 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db import transaction
+from datetime import datetime, timedelta
 import random
 from ..models import SolicitacaoMotorista
 from .utils import get_motoristas_disponiveis, _parse_datetime, _validar_datas, _processar_action_gerenciar
 
 
 def solicitacao_list(request):
-    return render(request, 'solicitacao_list.html', {'solicitacoes': SolicitacaoMotorista.objects.all()})
+    data_inicio_pesquisa = request.GET.get('data_inicio')
+    data_fim_pesquisa = request.GET.get('data_fim')
+    
+    filtros = {}
+    
+    if data_inicio_pesquisa:
+        filtros['data_fim_prevista__date__gte'] = data_inicio_pesquisa
+        
+    if data_fim_pesquisa:
+        filtros['data_inicio__date__lte'] = data_fim_pesquisa
+
+    solicitacoes = SolicitacaoMotorista.objects.filter(**filtros)
+    
+    today = datetime.now().strftime('%Y-%m-%d')
+    tomorrow = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
+    
+    return render(request, 'solicitacao_list.html', {
+        'solicitacoes': solicitacoes,
+        'data_inicio': data_inicio_pesquisa,
+        'data_fim': data_fim_pesquisa,
+        'today': today,
+        'tomorrow': tomorrow
+    })
 
 
 def solicitacao_detail(request, pk):

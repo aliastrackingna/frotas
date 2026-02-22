@@ -8,6 +8,30 @@
     <a href="{% url 'solicitacao_create' %}" class="btn btn-primary">+ Nova Solicitação</a>
 </div>
 
+<div class="filter-card">
+    <form method="get" class="filter-form">
+        <div class="filter-row">
+            <div class="filter-group">
+                <label for="data_inicio">Data Início:</label>
+                <input type="date" id="data_inicio" name="data_inicio" value="{{ data_inicio|default:'' }}">
+            </div>
+            <div class="filter-group">
+                <label for="data_fim">Data Fim:</label>
+                <input type="date" id="data_fim" name="data_fim" value="{{ data_fim|default:'' }}">
+            </div>
+            <div class="filter-actions">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+                <a href="{% url 'solicitacao_list' %}" class="btn btn-back">Limpar</a>
+            </div>
+        </div>
+        <div class="filter-shortcuts">
+            <span>Atalhos:</span>
+            <a href="?data_inicio={{ today }}&data_fim={{ today }}" class="btn btn-sm">Hoje</a>
+            <a href="?data_inicio={{ tomorrow }}&data_fim={{ tomorrow }}" class="btn btn-sm">Amanhã</a>
+        </div>
+    </form>
+</div>
+
 {% if solicitacoes %}
 <div class="item-cards">
     {% for s in solicitacoes %}
