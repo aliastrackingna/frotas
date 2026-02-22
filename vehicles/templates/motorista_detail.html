@@ -3,19 +3,38 @@
 {% block title %}Detalhes do Motorista - Frotas{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h1>Detalhes do Motorista</h1>
+<div class="header">
+    <h1>👤 Detalhes do Motorista</h1>
+    <a href="{% url 'motorista_list' %}" class="btn btn-back">← Voltar</a>
+</div>
+
+<div class="detail-card">
+    <h1>{{ motorista.nome }}</h1>
     
-    <div class="detail">
-        <p><label>ID:</label> {{ motorista.id_motorista }}</p>
-        <p><label>Nome:</label> {{ motorista.nome }}</p>
-        <p><label>Tipo de Carteira:</label> {{ motorista.get_tipo_carteira_display }}</p>
+    <div class="detail-row">
+        <span class="detail-label">ID</span>
+        <span class="detail-value">{{ motorista.id_motorista }}</span>
     </div>
     
-    <div class="margin-top">
+    <div class="detail-row">
+        <span class="detail-label">Nome</span>
+        <span class="detail-value">{{ motorista.nome }}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Carteira de Habilitação</span>
+        <span class="detail-value">{{ motorist.get_tipo_carteira_display }}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Tipo</span>
+        <span class="detail-value">{{ motorist.tipo_carteira }}</span>
+    </div>
+    
+    <div class="detail-actions">
         <a href="{% url 'motorista_list' %}" class="btn btn-back">Voltar</a>
         <a href="{% url 'motorista_update' motorista.id_motorista %}" class="btn btn-edit">Editar</a>
-        <a href="{% url 'motorista_delete' motorista.id_motorista %}" class="btn btn-delete">Excluir</a>
+        <a href="{% url 'motorista_delete' motorist.id_motorista %}" class="btn btn-delete">Excluir</a>
     </div>
 </div>
 

@@ -4,37 +4,44 @@
 
 {% block content %}
 <div class="header">
-    <h1>Motoristas</h1>
-    <a href="{% url 'motorista_create' %}" class="btn btn-primary">Novo Motorista</a>
+    <h1>👤 Motoristas</h1>
+    <a href="{% url 'motorista_create' %}" class="btn btn-primary">+ Novo Motorista</a>
 </div>
 
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Tipo de Carteira</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for m in motoristas %}
-        <tr>
-            <td>{{ m.id_motorista }}</td>
-            <td><a href="{% url 'motorista_detail' m.id_motorista %}">{{ m.nome }}</a></td>
-            <td>{{ m.get_tipo_carteira_display }}</td>
-            <td>
-                <a href="{% url 'motorista_detail' m.id_motorista %}" class="btn btn-primary">Ver</a>
-                <a href="{% url 'motorista_update' m.id_motorista %}" class="btn btn-edit">Editar</a>
-                <a href="{% url 'motorista_delete' m.id_motorista %}" class="btn btn-delete">Excluir</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="4">Nenhum motorista cadastrado.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% if motoristas %}
+<div class="item-cards">
+    {% for m in motoristas %}
+    <div class="item-card">
+        <div class="item-header">
+            <div>
+                <h3 class="item-title">{{ m.nome }}</h3>
+                <p class="item-subtitle">ID: #{{ m.id_motorista }}</p>
+            </div>
+            <span class="status-badge status-badge-confirmada">CNH {{ m.get_tipo_carteira_display }}</span>
+        </div>
+        
+        <div class="item-body">
+            <div class="item-info">
+                <span class="info-icon">🎓</span>
+                <span>Carteira {{ m.tipo_carteira }}</span>
+            </div>
+        </div>
+        
+        <div class="item-actions">
+            <a href="{% url 'motorista_detail' m.id_motorista %}" class="btn btn-primary">Ver</a>
+            <a href="{% url 'motorista_update' m.id_motorista %}" class="btn btn-edit">Editar</a>
+            <a href="{% url 'motorista_delete' m.id_motorista %}" class="btn btn-delete">Excluir</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="empty-icon">👤</div>
+    <h3>Nenhum motorista cadastrado</h3>
+    <p>Cadastre seu primeiro motorista para começar.</p>
+    <a href="{% url 'motorista_create' %}" class="btn btn-primary" style="margin-top: 15px;">+ Novo Motorista</a>
+</div>
+{% endif %}
 
 {% endblock %}

@@ -3,11 +3,14 @@
 {% block title %}Nova Solicitação de Viagem - Frotas{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h1>Nova Solicitação de Viagem</h1>
-    
+<div class="header">
+    <h1>➕ Nova Solicitação de Viagem</h1>
+    <a href="{% url 'solicitacao_viagem_list' %}" class="btn btn-back">← Voltar</a>
+</div>
+
+<div class="form-card">
     {% if error %}
-    <div class="alert {% if success %}alert-success{% else %}alert-error{% endif %}">
+    <div class="alert {% if success %}alert-success{% else %}alert-error{% endif %}" style="margin-bottom: 20px;">
         {{ error }}
     </div>
     {% endif %}
@@ -16,32 +19,32 @@
         {% csrf_token %}
         
         <div class="form-group">
-            <label for="data_viagem">Data e Hora da Viagem:</label>
+            <label for="data_viagem">Data e Hora da Viagem</label>
             <input type="datetime-local" id="data_viagem" name="data_viagem" required>
         </div>
         
         <div class="form-group">
-            <label for="data_fim_prevista">Data e Hora Prevista de Retorno:</label>
+            <label for="data_fim_prevista">Data e Hora Prevista de Retorno</label>
             <input type="datetime-local" id="data_fim_prevista" name="data_fim_prevista" required>
         </div>
         
         <div class="form-group">
-            <label for="quantidade_passageiros">Quantidade de Passageiros:</label>
+            <label for="quantidade_passageiros">Quantidade de Passageiros</label>
             <input type="number" id="quantidade_passageiros" name="quantidade_passageiros" value="1" min="1" required>
         </div>
         
         <div class="form-group">
-            <label for="local_embarque">Local de Embarque:</label>
-            <input type="text" id="local_embarque" name="local_embarque" required>
+            <label for="local_embarque">Local de Embarque</label>
+            <input type="text" id="local_embarque" name="local_embarque" required placeholder="Ex: Sede da empresa">
         </div>
         
         <div class="form-group">
-            <label for="local_desembarque">Local de Desembarque:</label>
-            <input type="text" id="local_desembarque" name="local_desembarque" required>
+            <label for="local_desembarque">Local de Desembarque</label>
+            <input type="text" id="local_desembarque" name="local_desembarque" required placeholder="Ex: Shopping Center">
         </div>
         
         <div class="form-group">
-            <label>Itinerário (locais adicionais):</label>
+            <label>Itinerário (locais adicionais)</label>
             <div id="itinerario-container">
                 <div class="form-row">
                     <input type="text" name="itinerario[]" placeholder="Local adicional...">
@@ -51,12 +54,14 @@
         </div>
         
         <div class="form-group">
-            <label for="observacao">Observação:</label>
-            <textarea id="observacao" name="observacao" rows="3"></textarea>
+            <label for="observacao">Observação</label>
+            <textarea id="observacao" name="observacao" rows="3" placeholder="Alguma observação adicional..."></textarea>
         </div>
         
-        <button type="submit" class="btn btn-primary">Agendar</button>
-        <a href="{% url 'solicitacao_viagem_list' %}" class="btn btn-back margin-left">Cancelar</a>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button type="submit" class="btn btn-primary">📅 Agendar</button>
+            <a href="{% url 'solicitacao_viagem_list' %}" class="btn btn-back">Cancelar</a>
+        </div>
     </form>
 </div>
 

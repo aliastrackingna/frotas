@@ -377,3 +377,303 @@ tr.row-pendente:hover { background-color: #ffe0b2; }
 
 select { padding: 10px; }
 button { cursor: pointer; }
+
+.item-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 15px;
+}
+
+.item-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-left: 4px solid #4CAF50;
+}
+
+.item-card-pendente {
+    border-left-color: #FF9800;
+    background: #fffbf5;
+}
+
+.item-card-cancelada {
+    border-left-color: #f44336;
+    opacity: 0.85;
+}
+
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.item-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.item-subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.item-body {
+    margin-bottom: 15px;
+}
+
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #555;
+}
+
+.item-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.form-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.form-card h1 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.form-card .form-group {
+    margin-bottom: 20px;
+}
+
+.form-card .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.form-card .form-group input,
+.form-card .form-group select,
+.form-card .form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #1e293b;
+    font-size: 14px;
+}
+
+.form-card .form-group input:focus,
+.form-card .form-group select:focus,
+.form-card .form-group textarea:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.form-card button[type="submit"] {
+    padding: 12px 24px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.form-card button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.detail-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.detail-card h1 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 24px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-row .detail-label {
+    font-weight: 600;
+    color: #64748b;
+    font-size: 14px;
+    flex-shrink: 0;
+    width: 180px;
+}
+
+.detail-row .detail-value {
+    color: #1e293b;
+    font-size: 14px;
+    text-align: right;
+    flex: 1;
+}
+
+.detail-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.confirm-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin: 0 auto;
+    border-left: 4px solid #f44336;
+}
+
+.confirm-card h1 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #f44336;
+}
+
+.confirm-message {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    color: #dc2626;
+}
+
+.confirm-message strong {
+    font-size: 16px;
+}
+
+.confirm-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.manage-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.manage-card h1 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.manage-card h2 {
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #2c3e50;
+}
+
+.manage-section {
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.manage-section:last-of-type {
+    border-bottom: none;
+}
+
+.manage-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.filter-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 25px;
+}
+
+.empty-list {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+}
+
+.empty-list-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-badge-pendente {
+    background: #fff3e0;
+    color: #FF9800;
+}
+
+.status-badge-confirmada {
+    background: #e8f5e9;
+    color: #4CAF50;
+}
+
+.status-badge-concluida {
+    background: #e3f2fd;
+    color: #2196F3;
+}
+
+.status-badge-cancelada {
+    background: #ffebee;
+    color: #f44336;
+}

@@ -4,40 +4,53 @@
 
 {% block content %}
 <div class="header">
-    <h1>Solicitações de Motorista</h1>
-    <a href="{% url 'solicitacao_create' %}" class="btn btn-primary">Nova Solicitação</a>
+    <h1>📋 Solicitações de Motorista</h1>
+    <a href="{% url 'solicitacao_create' %}" class="btn btn-primary">+ Nova Solicitação</a>
 </div>
 
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Data Início</th>
-            <th>Data Retorno</th>
-            <th>Motorista</th>
-            <th>Status</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for s in solicitacoes %}
-        <tr>
-            <td>{{ s.id }}</td>
-            <td>{{ s.data_inicio|date:"d/m/Y H:i" }}</td>
-            <td>{{ s.data_fim_prevista|date:"d/m/Y H:i" }}</td>
-            <td>{% if s.motorista %}{{ s.motorista.nome }}{% else %}--{% endif %}</td>
-            <td><span class="status-{{ s.status }}">{{ s.get_status_display }}</span></td>
-            <td>
-                <a href="{% url 'solicitacao_detail' s.id %}" class="btn btn-primary">Ver</a>
-                <a href="{% url 'solicitacao_gerenciar' s.id %}" class="btn btn-edit">Gerenciar</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="6">Nenhuma solicitação cadastrada.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% if solicitacoes %}
+<div class="item-cards">
+    {% for s in solicitacoes %}
+    <div class="item-card {% if s.status == 'Pendente' %}item-card-pendente{% elif s.status == 'Cancelada' %}item-card-cancelada{% endif %}">
+        <div class="item-header">
+            <div>
+                <h3 class="item-title">Solicitação #{{ s.id }}</h3>
+                <p class="item-subtitle">{{ s.data_inicio|date:"d/m/Y" }} - {{ s.data_fim_prevista|date:"d/m/Y" }}</p>
+            </div>
+            <span class="status-badge status-badge-{{ s.status|lower }}">{{ s.get_status_display }}</span>
+        </div>
+        
+        <div class="item-body">
+            <div class="item-info">
+                <span class="info-icon">📅</span>
+                <span>{{ s.data_inicio|date:"d/m H:i" }} - {{ s.data_fim_prevista|date:"d/m H:i" }}</span>
+            </div>
+            <div class="item-info">
+                <span class="info-icon">👤</span>
+                <span>{% if s.motorista %}{{ s.motorista.nome }}{% else %}Não atribuído{% endif %}</span>
+            </div>
+            {% if s.observacao %}
+            <div class="item-info">
+                <span class="info-icon">📝</span>
+                <span>{{ s.observacao|truncatechars:50 }}</span>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="item-actions">
+            <a href="{% url 'solicitacao_detail' s.id %}" class="btn btn-primary">Ver</a>
+            <a href="{% url 'solicitacao_gerenciar' s.id %}" class="btn btn-edit">Gerenciar</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="empty-icon">📋</div>
+    <h3>Nenhuma solicitação cadastrada</h3>
+    <p>Cadastre sua primeira solicitação de motorista.</p>
+    <a href="{% url 'solicitacao_create' %}" class="btn btn-primary" style="margin-top: 15px;">+ Nova Solicitação</a>
+</div>
+{% endif %}
 
 {% endblock %}

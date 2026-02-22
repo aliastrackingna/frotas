@@ -4,11 +4,11 @@
 
 {% block content %}
 <div class="header">
-    <h1>Solicitações de Viagem</h1>
-    <a href="{% url 'solicitacao_viagem_create' %}" class="btn btn-primary">Nova Viagem</a>
+    <h1>🚐 Solicitações de Viagem</h1>
+    <a href="{% url 'solicitacao_viagem_create' %}" class="btn btn-primary">+ Nova Viagem</a>
 </div>
 
-<div class="card filter-card">
+<div class="filter-card">
     <form method="get" class="filter-form">
         <div class="filter-row">
             <div class="filter-group">
@@ -32,42 +32,51 @@
     </form>
 </div>
 
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Data Viagem</th>
-            <th>Retorno</th>
-            <th>Passageiros</th>
-            <th>Embarque</th>
-            <th>Veículo</th>
-            <th>Motorista</th>
-            <th>Status</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for s in solicitacoes %}
-        <tr>
-            <td>{{ s.id }}</td>
-            <td>{{ s.data_viagem|date:"d/m/Y H:i" }}</td>
-            <td>{{ s.data_fim_prevista|date:"d/m/Y H:i" }}</td>
-            <td>{{ s.quantidade_passageiros }}</td>
-            <td>{{ s.local_embarque }}</td>
-            <td>{% if s.veiculo %}{{ s.veiculo.placa }}{% else %}--{% endif %}</td>
-            <td>{% if s.motorista %}{{ s.motorista.nome }}{% else %}--{% endif %}</td>
-            <td><span class="status-{{ s.status }}">{{ s.get_status_display }}</span></td>
-            <td>
-                <a href="{% url 'solicitacao_viagem_detail' s.id %}" class="btn btn-primary">Ver</a>
-                <a href="{% url 'solicitacao_viagem_gerenciar' s.id %}" class="btn btn-edit">Gerenciar</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="9">Nenhuma solicitação de viagem cadastrada.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% if solicitacoes %}
+<div class="item-cards">
+    {% for s in solicitacoes %}
+    <div class="item-card {% if s.status == 'Pendente' %}item-card-pendente{% elif s.status == 'Cancelada' %}item-card-cancelada{% endif %}">
+        <div class="item-header">
+            <div>
+                <h3 class="item-title">Viagem #{{ s.id }}</h3>
+                <p class="item-subtitle">{{ s.data_viagem|date:"d/m" }} - {{ s.data_fim_prevista|date:"d/m" }}</p>
+            </div>
+            <span class="status-badge status-badge-{{ s.status|lower }}">{{ s.get_status_display }}</span>
+        </div>
+        
+        <div class="item-body">
+            <div class="item-info">
+                <span class="info-icon">🚐</span>
+                <span>{% if s.veiculo %}{{ s.veiculo.placa }} - {{ s.veiculo.marca }}{% else %}Não atribuído{% endif %}</span>
+            </div>
+            <div class="item-info">
+                <span class="info-icon">👤</span>
+                <span>{% if s.motorista %}{{ s.motorista.nome }}{% else %}Não atribuído{% endif %}</span>
+            </div>
+            <div class="item-info">
+                <span class="info-icon">📍</span>
+                <span>{{ s.local_embarque }} → {{ s.local_desembarque }}</span>
+            </div>
+            <div class="item-info">
+                <span class="info-icon">👥</span>
+                <span>{{ s.quantidade_passageiros }} passageiros</span>
+            </div>
+        </div>
+        
+        <div class="item-actions">
+            <a href="{% url 'solicitacao_viagem_detail' s.id %}" class="btn btn-primary">Ver</a>
+            <a href="{% url 'solicitacao_viagem_gerenciar' s.id %}" class="btn btn-edit">Gerenciar</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="empty-icon">🚐</div>
+    <h3>Nenhuma solicitação de viagem encontrada</h3>
+    <p>Não há viagens agendadas para o período selecionado.</p>
+    <a href="{% url 'solicitacao_viagem_create' %}" class="btn btn-primary" style="margin-top: 15px;">+ Nova Viagem</a>
+</div>
+{% endif %}
 
 {% endblock %}
