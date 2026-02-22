@@ -3,38 +3,43 @@
 {% block title %}{% if veiculo %}Editar{% else %}Novo{% endif %} Veículo - Frotas{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h1>{% if veiculo %}Editar{% else %}Novo{% endif %} Veículo</h1>
-    
+<div class="header">
+    <h1>{% if veiculo %}✏️ Editar{% else %}➕ Novo{% endif %} Veículo</h1>
+    <a href="{% url 'veiculo_list' %}" class="btn btn-back">← Voltar</a>
+</div>
+
+<div class="form-card">
     <form method="post">
         {% csrf_token %}
         <div class="form-group">
-            <label for="placa">Placa:</label>
-            <input type="text" id="placa" name="placa" value="{{ veiculo.placa|default:'' }}" required maxlength="7">
+            <label for="placa">Placa do Veículo</label>
+            <input type="text" id="placa" name="placa" value="{{ veiculo.placa|default:'' }}" required maxlength="7" placeholder="Ex: ABC-1234">
         </div>
         
         <div class="form-group">
-            <label for="marca">Marca:</label>
-            <input type="text" id="marca" name="marca" value="{{ veiculo.marca|default:'' }}" required maxlength="50">
+            <label for="marca">Marca/Modelo</label>
+            <input type="text" id="marca" name="marca" value="{{ veiculo.marca|default:'' }}" required maxlength="50" placeholder="Ex: Volkswagen Kombi">
         </div>
         
         <div class="form-group">
-            <label for="quantidade_passageiros">Quantidade de Passageiros:</label>
-            <input type="number" id="quantidade_passageiros" name="quantidade_passageiros" value="{{ veiculo.quantidade_passageiros|default:'' }}" required min="1">
+            <label for="quantidade_passageiros">Quantidade de Passageiros</label>
+            <input type="number" id="quantidade_passageiros" name="quantidade_passageiros" value="{{ veiculo.quantidade_passageiros|default:'' }}" required min="1" placeholder="Número de lugares">
         </div>
         
         <div class="form-group">
-            <label for="km_inicial">KM Inicial:</label>
-            <input type="number" id="km_inicial" name="km_inicial" value="{{ veiculo.km_inicial|default:'0' }}" min="0">
+            <label for="km_inicial">KM Inicial</label>
+            <input type="number" id="km_inicial" name="km_inicial" value="{{ veiculo.km_inicial|default:'0' }}" min="0" placeholder="Quilometragem inicial">
         </div>
         
         <div class="form-group">
-            <label for="kms_atual">KM Atual:</label>
-            <input type="number" id="kms_atual" name="kms_atual" value="{{ veiculo.kms_atual|default:'0' }}" min="0">
+            <label for="kms_atual">KM Atual</label>
+            <input type="number" id="kms_atual" name="kms_atual" value="{{ veiculo.kms_atual|default:'0' }}" min="0" placeholder="Quilometragem atual">
         </div>
         
-        <button type="submit" class="btn btn-primary">Salvar</button>
-        <a href="{% url 'veiculo_list' %}" class="btn btn-back margin-left">Cancelar</a>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button type="submit" class="btn btn-primary">💾 Salvar</button>
+            <a href="{% url 'veiculo_list' %}" class="btn btn-back">Cancelar</a>
+        </div>
     </form>
 </div>
 {% endblock %}

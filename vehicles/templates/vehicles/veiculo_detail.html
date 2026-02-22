@@ -3,27 +3,53 @@
 {% block title %}Detalhes do Veículo - Frotas{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h1>Detalhes do Veículo</h1>
+<div class="header">
+    <h1>🚗 Detalhes do Veículo</h1>
+    <a href="{% url 'veiculo_list' %}" class="btn btn-back">← Voltar</a>
+</div>
+
+<div class="detail-card">
+    <h1>{{ veiculo.placa }}</h1>
     
-    <div class="detail">
-        <p><label>ID:</label> {{ veiculo.id_veiculo }}</p>
-        <p><label>Placa:</label> {{ veiculo.placa }}</p>
-        <p><label>Marca:</label> {{ veiculo.marca }}</p>
-        <p><label>Quantidade de Passageiros:</label> {{ veiculo.quantidade_passageiros }}</p>
-        <p><label>KM Inicial:</label> {{ veiculo.km_inicial }}</p>
-        <p><label>KM Atual:</label> {{ veiculo.kms_atual }}</p>
+    <div class="detail-row">
+        <span class="detail-label">ID</span>
+        <span class="detail-value">{{ veiculo.id_veiculo }}</span>
     </div>
     
-    <div class="margin-top">
+    <div class="detail-row">
+        <span class="detail-label">Placa</span>
+        <span class="detail-value">{{ veiculo.placa }}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Marca</span>
+        <span class="detail-value">{{ veiculo.marca }}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Passageiros</span>
+        <span class="detail-value">{{ veiculo.quantidade_passageiros }}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">KM Inicial</span>
+        <span class="detail-value">{{ veiculo.km_inicial|floatformat:"0" }}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">KM Atual</span>
+        <span class="detail-value">{{ veiculo.kms_atual|floatformat:"0" }}</span>
+    </div>
+    
+    <div class="detail-actions">
         <a href="{% url 'veiculo_list' %}" class="btn btn-back">Voltar</a>
         <a href="{% url 'veiculo_update' veiculo.id_veiculo %}" class="btn btn-edit">Editar</a>
         <a href="{% url 'veiculo_delete' veiculo.id_veiculo %}" class="btn btn-delete">Excluir</a>
     </div>
 </div>
 
-<div class="card">
-    <h2>Observações</h2>
+<div class="detail-card" style="margin-top: 20px;">
+    <h1>📝 Observações</h1>
     
     <form method="post" action="{% url 'observacao_create' veiculo.id_veiculo %}" class="form-margin-bottom">
         {% csrf_token %}
@@ -33,13 +59,16 @@
         <button type="submit" class="btn btn-primary">Adicionar Observação</button>
     </form>
     
-    <ul>
+    <div class="item-body">
         {% for obs in veiculo.observacoes.all %}
-        <li class="detail-item">{{ obs.texto }} <br><small>{{ obs.data_criacao }}</small></li>
+        <div class="item-info" style="border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
+            <span class="info-icon">📝</span>
+            <span>{{ obs.texto }} <small style="color: #999;">- {{ obs.data_criacao|date:"d/m/Y H:i" }}</small></span>
+        </div>
         {% empty %}
-        <li>Nenhuma observação.</li>
+        <p style="color: #999; text-align: center;">Nenhuma observação.</p>
         {% endfor %}
-    </ul>
+    </div>
 </div>
 
 {% endblock %}

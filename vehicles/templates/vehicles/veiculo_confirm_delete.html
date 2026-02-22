@@ -3,17 +3,25 @@
 {% block title %}Excluir Veículo - Frotas{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h1>Excluir Veículo</h1>
+<div class="header">
+    <h1>🗑️ Excluir Veículo</h1>
+    <a href="{% url 'veiculo_list' %}" class="btn btn-back">← Voltar</a>
+</div>
+
+<div class="confirm-card">
+    <h1>Confirmar Exclusão</h1>
     
-    <div class="confirm-box">
-        <p>Tem certeza que deseja excluir o veículo <strong>{{ veiculo.placa }}</strong> ({{ veiculo.marca }})?</p>
+    <div class="confirm-message">
+        <p>Tem certeza que deseja excluir o veículo <strong>{{ veiculo.placa }}</strong>?</p>
+        <p style="margin-top: 10px; font-size: 14px;">Marca: {{ veiculo.marca }}</p>
     </div>
     
     <form method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-delete">Sim, Excluir</button>
-        <a href="{% url 'veiculo_list' %}" class="btn btn-back margin-left">Cancelar</a>
+        <div class="confirm-actions">
+            <button type="submit" class="btn btn-delete">🗑️ Sim, Excluir</button>
+            <a href="{% url 'veiculo_list' %}" class="btn btn-back">Cancelar</a>
+        </div>
     </form>
 </div>
 {% endblock %}
