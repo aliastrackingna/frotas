@@ -70,9 +70,11 @@ def solicitacao_create(request):
                 solicitacao.save()
                 return redirect('solicitacao_detail', pk=solicitacao.pk)
             else:
+                solicitacao.status = 'Cancelada'
+                solicitacao.save()                
                 return render(request, 'solicitacao_form.html', {
-                    'error': 'Nenhum motorista disponível neste horário. A solicitação ficou pendente.',
-                    'success': True
+                    'error': 'Nenhum motorista disponível neste horário. A solicitação foi cancelada.',
+                    'success': False
                 })
     
     return render(request, 'solicitacao_form.html')
