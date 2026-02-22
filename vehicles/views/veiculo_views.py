@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.db import models
 from ..models import Veiculo
 
 
@@ -9,12 +10,16 @@ def index(request):
 
 def veiculo_list(request):
     veiculos = Veiculo.objects.all()
-    placa = request.GET.get('placa', '')
-    if placa:
-        veiculos = veiculos.filter(placa__icontains=placa)
+    busca = request.GET.get('busca', '')
+    if busca:
+        veiculos = veiculos.filter(
+            models.Q(placa__icontains=busca) |
+            models.Q(marca__icontains=busca) |
+            models.Q(modelo__icontains=busca)
+        )
     return render(request, 'vehicles/veiculo_list.html', {
         'veiculos': veiculos,
-        'placa_busca': placa
+        'busca': busca
     })
 
 

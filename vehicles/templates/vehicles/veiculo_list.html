@@ -11,9 +11,9 @@
 <div class="filter-card">
     <form method="get" class="filter-form">
         <div class="filter-row">
-            <div class="filter-group">
-                <label for="placa">Placa:</label>
-                <input type="text" id="placa" name="placa" value="{{ placa_busca|default:'' }}" placeholder="Buscar por placa...">
+            <div class="filter-group" style="flex: 1;">
+                <label for="busca">Buscar:</label>
+                <input type="text" id="busca" name="busca" value="{{ busca|default:'' }}" placeholder="Placa, marca ou modelo...">
             </div>
             <div class="filter-actions">
                 <button type="submit" class="btn btn-primary">Filtrar</button>
@@ -30,12 +30,16 @@
         <div class="item-header">
             <div>
                 <h3 class="item-title">{{ veiculo.placa }}</h3>
-                <p class="item-subtitle">ID: #{{ veiculo.id_veiculo }}</p>
+                <p class="item-subtitle">{% if veiculo.modelo %}{{ veiculo.modelo }} - {% endif %}{{ veiculo.marca }}</p>
             </div>
-            <span class="status-badge status-badge-confirmada">{{ veiculo.marca }}</span>
+            <span class="status-badge status-badge-confirmada">{{ veiculo.quantidade_passageiros }} lug.</span>
         </div>
         
         <div class="item-body">
+            <div class="item-info">
+                <span class="info-icon">🏷️</span>
+                <span>{% if veiculo.modelo %}{{ veiculo.modelo }}{% else %}--{% endif %}</span>
+            </div>
             <div class="item-info">
                 <span class="info-icon">🚗</span>
                 <span>{{ veiculo.marca }}</span>

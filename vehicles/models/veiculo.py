@@ -5,6 +5,7 @@ class Veiculo(models.Model):
     id_veiculo = models.AutoField(primary_key=True)
     placa = models.CharField(max_length=7, unique=True)
     marca = models.CharField(max_length=50)
+    modelo = models.CharField(max_length=50, blank=True, default='')
     quantidade_passageiros = models.PositiveIntegerField()
     km_inicial = models.PositiveIntegerField(default=0)
     kms_atual = models.PositiveIntegerField(default=0)
