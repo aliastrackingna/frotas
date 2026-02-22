@@ -52,10 +52,10 @@ class SolicitacaoViagem(models.Model):
         null=True,
         blank=True
     )
-    motorista = models.ForeignKey(
-        Motorista,
+    solicitacao_motorista = models.ForeignKey(
+        SolicitacaoMotorista,
         on_delete=models.SET_NULL,
-        related_name='solicitacoes_viagem',
+        related_name='viagem',
         null=True,
         blank=True
     )

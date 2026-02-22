@@ -48,7 +48,7 @@
     
     <div class="detail-row">
         <span class="detail-label">Motorista</span>
-        <span class="detail-value">{% if solicitacao.motorista %}{{ solicitacao.motorista.nome }}{% else %}Não atribuído{% endif %}</span>
+        <span class="detail-value">{% if solicitacao.solicitacao_motorista %}{{ solicitacao.solicitacao_motorista.motorista.nome }}{% else %}Não atribuído{% endif %}</span>
     </div>
     
     <div class="manage-section">
@@ -71,16 +71,16 @@
     </div>
     
     <div class="manage-section">
-        <h2>👤 Atribuir Motorista</h2>
+        <h2>👤 Atribuir Solicitação de Motorista</h2>
         <form method="post" class="form-margin-bottom">
             {% csrf_token %}
-            <input type="hidden" name="action" value="atribuir_motorista">
+            <input type="hidden" name="action" value="atribuir_solicitacao_motorista">
             <div class="form-group">
-                <select name="motorista" required>
-                    <option value="">Selecione um motorista...</option>
-                    {% for m in motoristas %}
-                    <option value="{{ m.id_motorista }}" {% if solicitacao.motorista_id == m.id_motorista %}selected{% endif %}>
-                        {{ m.nome }} ({{ m.get_tipo_carteira_display }})
+                <select name="solicitacao_motorista" required>
+                    <option value="">Selecione uma solicitação de motorista...</option>
+                    {% for sm in solicitacoes_motorista %}
+                    <option value="{{ sm.id }}" {% if solicitacao.solicitacao_motorista_id == sm.id %}selected{% endif %}>
+                        {{ sm.motorista.nome }} - {{ sm.data_inicio|date:"d/m" }} ({{ sm.get_status_display }})
                     </option>
                     {% endfor %}
                 </select>

@@ -136,13 +136,14 @@ class SolicitacaoViagemModelTest(TestCase):
         self.assertIn('Pendente', str(viagem))
 
     def test_viagem_com_veiculo_e_motorista(self):
+        solicitacao_motorista = criar_solicitacao_motorista(motorista=self.motorista, status='Confirmada')
         viagem = criar_solicitacao_viagem(
             veiculo=self.veiculo,
-            motorista=self.motorista,
+            solicitacao_motorista=solicitacao_motorista,
             status='Confirmada'
         )
         self.assertEqual(viagem.veiculo.placa, "XYZ9999")
-        self.assertEqual(viagem.motorista.nome, "João Silva")
+        self.assertEqual(viagem.solicitacao_motorista.motorista.nome, "João Silva")
 
     def test_viagem_status_default(self):
         viagem = criar_solicitacao_viagem()
@@ -154,13 +155,15 @@ class SolicitacaoViagemModelTest(TestCase):
         self.assertEqual(SolicitacaoViagem.objects.count(), 2)
 
     def test_motorista_tem_viagens(self):
-        criar_solicitacao_viagem(motorista=self.motorista, status='Confirmada')
+        solicitacao_motorista1 = criar_solicitacao_motorista(motorista=self.motorista, status='Confirmada')
+        solicitacao_motorista2 = criar_solicitacao_motorista(data_inicio=data_futura(dias=2), data_fim=data_futura(dias=2, horas=4), motorista=self.motorista, status='Concluida')
+        criar_solicitacao_viagem(solicitacao_motorista=solicitacao_motorista1, status='Confirmada')
         criar_solicitacao_viagem(
             data_viagem=data_futura(dias=2),
-            motorista=self.motorista,
+            solicitacao_motorista=solicitacao_motorista2,
             status='Concluida'
         )
-        self.assertEqual(self.motorista.solicitacoes_viagem.count(), 2)
+        self.assertEqual(self.motorista.solicitacoes.count(), 2)
 
     def test_veiculo_tem_viagens(self):
         criar_solicitacao_viagem(veiculo=self.veiculo, status='Confirmada')
@@ -176,9 +179,10 @@ class RegistroPortariaModelTest(TestCase):
     def setUp(self):
         self.motorista = criar_motorista("Motorista Portaria", "D")
         self.veiculo = criar_veiculo("PORT001", "Mercedes-Benz", 44)
+        self.solicitacao_motorista = criar_solicitacao_motorista(motorista=self.motorista, status='Confirmada')
         self.viagem = criar_solicitacao_viagem(
             veiculo=self.veiculo,
-            motorista=self.motorista,
+            solicitacao_motorista=self.solicitacao_motorista,
             status='Confirmada'
         )
 

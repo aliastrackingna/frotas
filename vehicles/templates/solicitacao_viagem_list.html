@@ -51,7 +51,7 @@
             </div>
             <div class="item-info">
                 <span class="info-icon">👤</span>
-                <span>{% if s.motorista %}{{ s.motorista.nome }}{% else %}Não atribuído{% endif %}</span>
+                <span>{% if s.solicitacao_motorista %}{{ s.solicitacao_motorista.motorista.nome }}{% else %}Não atribuído{% endif %}</span>
             </div>
             <div class="item-info">
                 <span class="info-icon">📍</span>

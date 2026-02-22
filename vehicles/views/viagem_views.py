@@ -2,10 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.db import transaction
 from datetime import datetime, timedelta
 import random
-from ..models import SolicitacaoViagem
+from ..models import SolicitacaoViagem, SolicitacaoMotorista
 from .utils import (
     get_veiculos_disponiveis, 
-    get_motoristas_disponiveis_viagem, 
     _parse_datetime, 
     _validar_datas, 
     _processar_action_gerenciar
@@ -56,23 +55,25 @@ def solicitacao_viagem_gerenciar(request, pk):
         solicitacao.data_fim_prevista,
         solicitacao.quantidade_passageiros
     )
-    motoristas_disponiveis = get_motoristas_disponiveis_viagem(
-        solicitacao.data_viagem, 
-        solicitacao.data_fim_prevista
-    )
     
     if request.method == 'POST':
         action = request.POST.get('action')
         veiculo_id = request.POST.get('veiculo')
-        motoristal_id = request.POST.get('motorista')
+        solicitacao_motorista_id = request.POST.get('solicitacao_motorista')
         
-        if _processar_action_gerenciar(solicitacao, action, veiculo_id, motoristal_id):
+        if _processar_action_gerenciar(solicitacao, action, veiculo_id=veiculo_id, solicitacao_motorista_id=solicitacao_motorista_id):
             return redirect('solicitacao_viagem_detail', pk=pk)
+    
+    solicitacoes_motorista = SolicitacaoMotorista.objects.filter(
+        data_inicio__lte=solicitacao.data_fim_prevista,
+        data_fim_prevista__gte=solicitacao.data_viagem,
+        status__in=['Pendente', 'Confirmada']
+    )
     
     return render(request, 'solicitacao_viagem_gerenciar.html', {
         'solicitacao': solicitacao,
         'veiculos': list(veiculos_disponiveis),
-        'motoristas': list(motoristas_disponiveis)
+        'solicitacoes_motorista': list(solicitacoes_motorista)
     })
 
 
@@ -112,13 +113,9 @@ def solicitacao_viagem_create(request):
             veiculos_disp = get_veiculos_disponiveis(data_viagem, data_fim, quantidade_passageiros)
             lista_veiculos = list(veiculos_disp)
             
-            motoristas_disp = get_motoristas_disponiveis_viagem(data_viagem, data_fim)
-            lista_motoristas = list(motoristas_disp)
-            
-            if lista_veiculos and lista_motoristas:
+            if lista_veiculos:
                 random.seed()
                 solicitacao.veiculo = lista_veiculos[0]
-                solicitacao.motorista = random.choice(lista_motoristas)
 
                 capacidade = solicitacao.veiculo.quantidade_passageiros
                 
@@ -140,8 +137,6 @@ def solicitacao_viagem_create(request):
                 errors = []
                 if not lista_veiculos:
                     errors.append('Nenhum veículo disponível com essa capacidade.')
-                if not lista_motoristas:
-                    errors.append('Nenhum motorista disponível neste horário.')
                 
                 solicitacao.status = 'Pendente'
                 solicitacao.save()

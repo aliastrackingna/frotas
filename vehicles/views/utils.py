@@ -50,7 +50,7 @@ def _validar_datas(data_inicio, data_fim):
 
 def _atualizar_status_solicitacao(solicitacao):
     if isinstance(solicitacao, SolicitacaoViagem):
-        if solicitacao.motorista and solicitacao.veiculo:
+        if solicitacao.solicitacao_motorista and solicitacao.veiculo:
             solicitacao.status = 'Confirmada'
             solicitacao.save()
     elif isinstance(solicitacao, SolicitacaoMotorista):
@@ -59,23 +59,32 @@ def _atualizar_status_solicitacao(solicitacao):
             solicitacao.save()
 
 
-def _processar_action_gerenciar(solicitacao, action, veiculo_id=None, motorista_id=None):
+def _processar_action_gerenciar(solicitacao, action, veiculo_id=None, solicitacao_motorista_id=None, motoristal_id=None):
     actions = {
         'cancelar': lambda s: setattr(s, 'status', 'Cancelada'),
         'confirmar': lambda s: setattr(s, 'status', 'Confirmada'),
         'concluir': lambda s: setattr(s, 'status', 'Concluida'),
     }
     
-    if action == 'atribuir_motorista' and motorista_id:
-        solicitacao.motorista_id = motorista_id
-        _atualizar_status_solicitacao(solicitacao)
-    elif action == 'atribuir_veiculo' and veiculo_id:
-        solicitacao.veiculo_id = veiculo_id
-        _atualizar_status_solicitacao(solicitacao)
-    elif action in actions:
-        actions[action](solicitacao)
-    else:
-        return False
+    if isinstance(solicitacao, SolicitacaoViagem):
+        if action == 'atribuir_solicitacao_motorista' and solicitacao_motorista_id:
+            solicitacao.solicitacao_motorista_id = solicitacao_motorista_id
+            _atualizar_status_solicitacao(solicitacao)
+        elif action == 'atribuir_veiculo' and veiculo_id:
+            solicitacao.veiculo_id = veiculo_id
+            _atualizar_status_solicitacao(solicitacao)
+        elif action in actions:
+            actions[action](solicitacao)
+        else:
+            return False
+    elif isinstance(solicitacao, SolicitacaoMotorista):
+        if action == 'atribuir_motorista' and motoristal_id:
+            solicitacao.motorista_id = motoristal_id
+            _atualizar_status_solicitacao(solicitacao)
+        elif action in actions:
+            actions[action](solicitacao)
+        else:
+            return False
     
     solicitacao.save()
     return True

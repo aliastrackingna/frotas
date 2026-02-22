@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils import timezone
 from datetime import timedelta
 from vehicles.models import Veiculo, Observacao, Motorista, SolicitacaoMotorista, SolicitacaoViagem, RegistroPortaria
-from vehicles.tests.fixtures import criar_motorista, criar_veiculo, criar_solicitacao_viagem, data_futura
+from vehicles.tests.fixtures import criar_motorista, criar_veiculo, criar_solicitacao_motorista, criar_solicitacao_viagem, data_futura
 
 
 class ObservacaoViewTest(TestCase):
@@ -221,6 +221,12 @@ class SolicitacaoViagemViewTest(TestCase):
 
     def test_detalhes_viagem(self):
         agora = timezone.now()
+        solicitacao_motorista = SolicitacaoMotorista.objects.create(
+            data_inicio=agora + timedelta(days=1),
+            data_fim_prevista=agora + timedelta(days=1, hours=2),
+            motorista=self.motorista,
+            status='Confirmada'
+        )
         viagem = SolicitacaoViagem.objects.create(
             data_viagem=agora + timedelta(days=1),
             data_fim_prevista=agora + timedelta(days=1, hours=2),
@@ -229,7 +235,7 @@ class SolicitacaoViagemViewTest(TestCase):
             local_desembarque="Aeroporto",
             status='Confirmada',
             veiculo=self.veiculo,
-            motorista=self.motorista
+            solicitacao_motorista=solicitacao_motorista
         )
         response = self.client.get(reverse('solicitacao_viagem_detail', args=[viagem.id]))
         self.assertEqual(response.status_code, 200)
@@ -310,9 +316,13 @@ class PortariaViewTest(TestCase):
         self.client = Client()
         self.motorista = criar_motorista("Motorista Portaria", "D")
         self.veiculo = criar_veiculo("PORT001", "Mercedes-Benz", 44, kms_atual=1000)
+        self.solicitacao_motorista = criar_solicitacao_motorista(
+            motorista=self.motorista,
+            status='Confirmada'
+        )
         self.viagem = criar_solicitacao_viagem(
             veiculo=self.veiculo,
-            motorista=self.motorista,
+            solicitacao_motorista=self.solicitacao_motorista,
             status='Confirmada'
         )
 
@@ -487,6 +497,12 @@ class ViagemGerenciarViewTest(TestCase):
             marca="Volvo",
             quantidade_passageiros=44
         )
+        self.solicitacao_motorista = SolicitacaoMotorista.objects.create(
+            data_inicio=timezone.now() + timedelta(days=5),
+            data_fim_prevista=timezone.now() + timedelta(days=5, hours=4),
+            motorista=self.motorista,
+            status='Confirmada'
+        )
         self.viagem = SolicitacaoViagem.objects.create(
             data_viagem=timezone.now() + timedelta(days=5),
             data_fim_prevista=timezone.now() + timedelta(days=5, hours=4),
@@ -511,10 +527,10 @@ class ViagemGerenciarViewTest(TestCase):
 
         response = self.client.post(
             reverse('solicitacao_viagem_gerenciar', args=[self.viagem.id]),
-            {'action': 'atribuir_motorista', 'motorista': self.motorista.id_motorista}
+            {'action': 'atribuir_solicitacao_motorista', 'solicitacao_motorista': self.solicitacao_motorista.id}
         )
         self.viagem.refresh_from_db()
-        self.assertEqual(self.viagem.motorista, self.motorista)
+        self.assertEqual(self.viagem.solicitacao_motorista, self.solicitacao_motorista)
         self.assertEqual(self.viagem.status, 'Confirmada')
 
     def test_cancelar_viagem(self):
@@ -547,6 +563,12 @@ class PortariaKmValidationTest(TestCase):
             quantidade_passageiros=44,
             kms_atual=1000
         )
+        self.solicitacao_motorista = SolicitacaoMotorista.objects.create(
+            data_inicio=timezone.now() + timedelta(days=1),
+            data_fim_prevista=timezone.now() + timedelta(days=1, hours=4),
+            motorista=self.motorista,
+            status='Confirmada'
+        )
         self.viagem = SolicitacaoViagem.objects.create(
             data_viagem=timezone.now() + timedelta(days=1),
             data_fim_prevista=timezone.now() + timedelta(days=1, hours=4),
@@ -554,7 +576,7 @@ class PortariaKmValidationTest(TestCase):
             local_embarque="A",
             local_desembarque="B",
             veiculo=self.veiculo,
-            motorista=self.motorista,
+            solicitacao_motorista=self.solicitacao_motorista,
             status='Confirmada'
         )
 

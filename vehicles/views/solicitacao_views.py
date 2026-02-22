@@ -25,7 +25,7 @@ def solicitacao_gerenciar(request, pk):
         veiculo_id = None
         motoristal_id = request.POST.get('motorista')
         
-        if _processar_action_gerenciar(solicitacao, action, veiculo_id, motoristal_id):
+        if _processar_action_gerenciar(solicitacao, action, veiculo_id=veiculo_id, motoristal_id=motoristal_id):
             return redirect('solicitacao_detail', pk=pk)
     
     return render(request, 'solicitacao_gerenciar.html', {
