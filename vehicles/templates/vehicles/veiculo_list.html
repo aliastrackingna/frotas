@@ -8,6 +8,21 @@
     <a href="{% url 'veiculo_create' %}" class="btn btn-primary">+ Novo Veículo</a>
 </div>
 
+<div class="filter-card">
+    <form method="get" class="filter-form">
+        <div class="filter-row">
+            <div class="filter-group">
+                <label for="placa">Placa:</label>
+                <input type="text" id="placa" name="placa" value="{{ placa_busca|default:'' }}" placeholder="Buscar por placa...">
+            </div>
+            <div class="filter-actions">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+                <a href="{% url 'veiculo_list' %}" class="btn btn-back">Limpar</a>
+            </div>
+        </div>
+    </form>
+</div>
+
 {% if veiculos %}
 <div class="item-cards">
     {% for veiculo in veiculos %}

@@ -8,7 +8,14 @@ def index(request):
 
 
 def veiculo_list(request):
-    return render(request, 'vehicles/veiculo_list.html', {'veiculos': Veiculo.objects.all()})
+    veiculos = Veiculo.objects.all()
+    placa = request.GET.get('placa', '')
+    if placa:
+        veiculos = veiculos.filter(placa__icontains=placa)
+    return render(request, 'vehicles/veiculo_list.html', {
+        'veiculos': veiculos,
+        'placa_busca': placa
+    })
 
 
 def veiculo_detail(request, pk):
