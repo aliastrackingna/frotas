@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes do Veículo - Frotas{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>🚗 Detalhes do Veículo</h1>
+    <a href="{% url 'veiculo_list' %}" class="btn btn-back">← Voltar</a>
+</div>
+
+<div class="detail-card">
+    <h1>{{ veiculo.placa }}</h1>
+    
+    <div class="detail-row">
+        <span class="detail-label">ID</span>
+        <span class="detail-value">{{ veiculo.id_veiculo }}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Placa</span>
+        <span class="detail-value">{{ veiculo.placa }}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Marca</span>
+        <span class="detail-value">{{ veiculo.marca }}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Passageiros</span>
+        <span class="detail-value">{{ veiculo.quantidade_passageiros }}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">KM Inicial</span>
+        <span class="detail-value">{{ veiculo.km_inicial|floatformat:"0" }}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">KM Atual</span>
+        <span class="detail-value">{{ veiculo.kms_atual|floatformat:"0" }}</span>
+    </div>
+    
+    <div class="detail-actions">
+        <a href="{% url 'veiculo_list' %}" class="btn btn-back">Voltar</a>
+        <a href="{% url 'veiculo_update' veiculo.id_veiculo %}" class="btn btn-edit">Editar</a>
+        <a href="{% url 'veiculo_delete' veiculo.id_veiculo %}" class="btn btn-delete">Excluir</a>
+    </div>
+</div>
+
+<div class="detail-card" style="margin-top: 20px;">
+    <h1>📝 Observações</h1>
+    
+    <form method="post" action="{% url 'observacao_create' veiculo.id_veiculo %}" class="form-margin-bottom">
+        {% csrf_token %}
+        <div class="form-group">
+            <textarea name="texto" rows="3" placeholder="Digite uma observação..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Adicionar Observação</button>
+    </form>
+    
+    <div class="item-body">
+        {% for obs in veiculo.observacoes.all %}
+        <div class="item-info" style="border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
+            <span class="info-icon">📝</span>
+            <span>{{ obs.texto }} <small style="color: #999;">- {{ obs.data_criacao|date:"d/m/Y H:i" }}</small></span>
+        </div>
+        {% empty %}
+        <p style="color: #999; text-align: center;">Nenhuma observação.</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

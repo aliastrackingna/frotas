@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if motorista %}Editar{% else %}Novo{% endif %} Motorista - Frotas{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>{% if motorista %}✏️ Editar{% else %}➕ Novo{% endif %} Motorista</h1>
+    <a href="{% url 'motorista_list' %}" class="btn btn-back">← Voltar</a>
+</div>
+
+<div class="form-card">
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="nome">Nome Completo</label>
+            <input type="text" id="nome" name="nome" value="{{ motorista.nome|default:'' }}" required maxlength="100" placeholder="Digite o nome completo">
+        </div>
+        
+        <div class="form-group">
+            <label for="tipo_carteira">Tipo de Carteira de Habilitação</label>
+            <select id="tipo_carteira" name="tipo_carteira" required>
+                <option value="">Selecione...</option>
+                <option value="A" {% if motorista.tipo_carteira == 'A' %}selected{% endif %}>A - Motocicleta</option>
+                <option value="B" {% if motorista.tipo_carteira == 'B' %}selected{% endif %}>B - Carro</option>
+                <option value="C" {% if motorista.tipo_carteira == 'C' %}selected{% endif %}>C - Caminhão</option>
+                <option value="D" {% if motorista.tipo_carteira == 'D' %}selected{% endif %}>D - Ônibus</option>
+                <option value="E" {% if motorist.tipo_carteira == 'E' %}selected{% endif %}>E - Carreta</option>
+            </select>
+        </div>
+        
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button type="submit" class="btn btn-primary">💾 Salvar</button>
+            <a href="{% url 'motorista_list' %}" class="btn btn-back">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

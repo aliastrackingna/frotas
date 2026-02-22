@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Frotas - Início{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Bem-vindo ao Sistema de Frotas</h1>
+    <p>Gerencie seus veículos de forma simples e eficiente.</p>
+</div>
+
+<div class="dashboard-grid">
+    <div class="card">
+        <h2>🚚 Veículos</h2>
+        <p class="stat-number">{{ total_veiculos }}</p>
+        <a href="{% url 'veiculo_list' %}" class="link-primary">Ver veículos →</a>
+    </div>
+    
+    <div class="card">
+        <h2>➕ Novo Veículo</h2>
+        <p>Cadastre um novo veículo na frota.</p>
+        <a href="{% url 'veiculo_create' %}" class="link-primary">Cadastrar →</a>
+    </div>
+    
+    <div class="card">
+        <h2>⚙️ Admin</h2>
+        <p>Acesse o painel administrativo.</p>
+        <a href="/admin/" class="link-primary">Acessar →</a>
+    </div>
+</div>
+{% endblock %}

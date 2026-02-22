@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Veículos - Frotas{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>🚗 Veículos</h1>
+    <a href="{% url 'veiculo_create' %}" class="btn btn-primary">+ Novo Veículo</a>
+</div>
+
+<div class="filter-card">
+    <form method="get" class="filter-form">
+        <div class="filter-row">
+            <div class="filter-group" style="flex: 1;">
+                <label for="busca">Buscar:</label>
+                <input type="text" id="busca" name="busca" value="{{ busca|default:'' }}" placeholder="Placa, marca ou modelo...">
+            </div>
+            <div class="filter-actions">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+                <a href="{% url 'veiculo_list' %}" class="btn btn-back">Limpar</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% if veiculos %}
+<div class="item-cards">
+    {% for veiculo in veiculos %}
+    <div class="item-card">
+        <div class="item-header">
+            <div>
+                <h3 class="item-title">{{ veiculo.placa }}</h3>
+                <p class="item-subtitle">{% if veiculo.modelo %}{{ veiculo.modelo }} - {% endif %}{{ veiculo.marca }}</p>
+            </div>
+            <span class="status-badge status-badge-confirmada">{{ veiculo.quantidade_passageiros }} lug.</span>
+        </div>
+        
+        <div class="item-body">
+            <div class="item-info">
+                <span class="info-icon">🏷️</span>
+                <span>{% if veiculo.modelo %}{{ veiculo.modelo }}{% else %}--{% endif %}</span>
+            </div>
+            <div class="item-info">
+                <span class="info-icon">🚗</span>
+                <span>{{ veiculo.marca }}</span>
+            </div>
+            <div class="item-info">
+                <span class="info-icon">👥</span>
+                <span>{{ veiculo.quantidade_passageiros }} passageiros</span>
+            </div>
+            <div class="item-info">
+                <span class="info-icon">📏</span>
+                <span>KM Atual: {{ veiculo.kms_atual|floatformat:"0" }}</span>
+            </div>
+            <div class="item-info">
+                <span class="info-icon">🛣️</span>
+                <span>KM Inicial: {{ veiculo.km_inicial|floatformat:"0" }}</span>
+            </div>
+        </div>
+        
+        <div class="item-actions">
+            <a href="{% url 'veiculo_detail' veiculo.id_veiculo %}" class="btn btn-primary">Ver</a>
+            <a href="{% url 'veiculo_update' veiculo.id_veiculo %}" class="btn btn-edit">Editar</a>
+            <a href="{% url 'veiculo_delete' veiculo.id_veiculo %}" class="btn btn-delete">Excluir</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="empty-icon">🚗</div>
+    <h3>Nenhum veículo cadastrado</h3>
+    <p>Cadastre seu primeiro veículo para começar.</p>
+    <a href="{% url 'veiculo_create' %}" class="btn btn-primary" style="margin-top: 15px;">+ Novo Veículo</a>
+</div>
+{% endif %}
+
+{% endblock %}

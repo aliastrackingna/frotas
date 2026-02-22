@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Nova Solicitação de Viagem - Frotas{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>➕ Nova Solicitação de Viagem</h1>
+    <a href="{% url 'solicitacao_viagem_list' %}" class="btn btn-back">← Voltar</a>
+</div>
+
+<div class="form-card">
+    {% if error %}
+    <div class="alert {% if success %}alert-success{% else %}alert-error{% endif %}" style="margin-bottom: 20px;">
+        {{ error }}
+    </div>
+    {% endif %}
+    
+    <form method="post" id="viagem-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label>Data e Hora da Viagem</label>
+            <div class="form-row">
+                <div class="form-group" style="flex: 1;">
+                    <input type="text" id="data_viagem_data" name="data_viagem_data" class="flatpickr-date" required placeholder="Data">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <select id="data_viagem_hora" name="data_viagem_hora" required>
+                        {% include 'utils/options_util.html' %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>Data e Hora Prevista de Retorno</label>
+            <div class="form-row">
+                <div class="form-group" style="flex: 1;">
+                    <input type="text" id="data_fim_prevista_data" name="data_fim_prevista_data" class="flatpickr-date" required placeholder="Data">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <select id="data_fim_prevista_hora" name="data_fim_prevista_hora" required>
+                        {% include 'utils/options_util.html' %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="quantidade_passageiros">Quantidade de Passageiros</label>
+            <input type="number" id="quantidade_passageiros" name="quantidade_passageiros" value="1" min="1" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="local_embarque">Local de Embarque</label>
+            <input type="text" id="local_embarque" name="local_embarque" required placeholder="Ex: Sede da empresa">
+        </div>
+        
+        <div class="form-group">
+            <label for="local_desembarque">Local de Desembarque</label>
+            <input type="text" id="local_desembarque" name="local_desembarque" required placeholder="Ex: Shopping Center">
+        </div>
+        
+        <div class="form-group">
+            <label>Itinerário (locais adicionais)</label>
+            <div id="itinerario-container">
+                <div class="form-row">
+                    <input type="text" name="itinerario[]" placeholder="Local adicional...">
+                    <button type="button" onclick="addItinerario()" class="btn btn-edit">+</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="observacao">Observação</label>
+            <textarea id="observacao" name="observacao" rows="3" placeholder="Alguma observação adicional..."></textarea>
+        </div>
+        
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button type="submit" class="btn btn-primary">📅 Agendar</button>
+            <a href="{% url 'solicitacao_viagem_list' %}" class="btn btn-back">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr(".flatpickr-date", {
+            dateFormat: "Y-m-d",
+            altFormat: "d/m/Y",
+            minDate: "today",
+            locale: "pt"
+        });
+    });
+
+    function addItinerario() {
+        const container = document.getElementById('itinerario-container');
+        const div = document.createElement('div');
+        div.className = 'form-row';
+        div.innerHTML = `
+            <input type="text" name="itinerario[]" placeholder="Local adicional...">
+            <button type="button" onclick="this.parentElement.remove()" class="btn btn-delete">-</button>
+        `;
+        container.appendChild(div);
+    }
+</script>
+{% endblock %}

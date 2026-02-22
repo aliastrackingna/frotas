@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes da Viagem - Frotas{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>🚐 Detalhes da Viagem</h1>
+    <a href="{% url 'solicitacao_viagem_list' %}" class="btn btn-back">← Voltar</a>
+</div>
+
+<div class="detail-card">
+    <h1>Viagem #{{ solicitacao.id }}</h1>
+    
+    <div class="detail-row">
+        <span class="detail-label">ID</span>
+        <span class="detail-value">{{ solicitacao.id }}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Data da Viagem</span>
+        <span class="detail-value">{{ solicitacao.data_viagem|date:"d/m/Y H:i" }}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Retorno Previsto</span>
+        <span class="detail-value">{{ solicitacao.data_fim_prevista|date:"d/m/Y H:i" }}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Passageiros</span>
+        <span class="detail-value">{{ solicitacao.quantidade_passageiros }}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Local de Embarque</span>
+        <span class="detail-value">{{ solicitacao.local_embarque }}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Local de Desembarque</span>
+        <span class="detail-value">{{ solicitacao.local_desembarque }}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Itinerário</span>
+        <span class="detail-value">
+            {% if solicitacao.itinerario %}
+                {% for local in solicitacao.itinerario %}
+                    {{ local }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            {% else %}--{% endif %}
+        </span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Veículo</span>
+        <span class="detail-value">{% if solicitacao.veiculo %}{{ solicitacao.veiculo.placa }} - {{ solicitacao.veiculo.marca }} ({{ solicitacao.veiculo.quantidade_passageiros }}){% else %}Não atribuído{% endif %}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Motorista</span>
+        <span class="detail-value">{% if solicitacao.solicitacao_motorista %}{{ solicitacao.solicitacao_motorista.motorista.nome }}{% else %}Não atribuído{% endif %}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Status</span>
+        <span class="detail-value"><span class="status-badge status-badge-{{ solicitacao.status|lower }}">{{ solicitacao.get_status_display }}</span></span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Observação</span>
+        <span class="detail-value">{% if solicitacao.observacao %}{{ solicitacao.observacao }}{% else %}--{% endif %}</span>
+    </div>
+    
+    <div class="detail-row">
+        <span class="detail-label">Data de Criação</span>
+        <span class="detail-value">{{ solicitacao.data_criacao|date:"d/m/Y H:i" }}</span>
+    </div>
+    
+    <div class="detail-actions">
+        <a href="{% url 'solicitacao_viagem_list' %}" class="btn btn-back">Voltar</a>
+        <a href="{% url 'solicitacao_viagem_gerenciar' solicitacao.id %}" class="btn btn-edit">Gerenciar</a>
+    </div>
+</div>
+{% endblock %}

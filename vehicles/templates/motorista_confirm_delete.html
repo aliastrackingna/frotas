@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Excluir Motorista - Frotas{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>🗑️ Excluir Motorista</h1>
+    <a href="{% url 'motorista_list' %}" class="btn btn-back">← Voltar</a>
+</div>
+
+<div class="confirm-card">
+    <h1>Confirmar Exclusão</h1>
+    
+    <div class="confirm-message">
+        <p>Tem certeza que deseja excluir o motorista <strong>{{ motorist.nome }}</strong>?</p>
+        <p style="margin-top: 10px; font-size: 14px;">Tipo de CNH: {{ motorist.get_tipo_carteira_display }}</p>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="confirm-actions">
+            <button type="submit" class="btn btn-delete">🗑️ Sim, Excluir</button>
+            <a href="{% url 'motorista_list' %}" class="btn btn-back">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
