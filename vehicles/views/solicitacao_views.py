@@ -1,11 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db import transaction
+from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta
 import random
 from ..models import SolicitacaoMotorista
 from .utils import get_motoristas_disponiveis, _parse_datetime, _validar_datas, _processar_action_gerenciar
 
 
+@login_required
 def solicitacao_list(request):
     data_inicio_pesquisa = request.GET.get('data_inicio')
     data_fim_pesquisa = request.GET.get('data_fim')
@@ -32,11 +34,13 @@ def solicitacao_list(request):
     })
 
 
+@login_required
 def solicitacao_detail(request, pk):
     solicitacao = get_object_or_404(SolicitacaoMotorista, pk=pk)
     return render(request, 'solicitacao_detail.html', {'solicitacao': solicitacao})
 
 
+@login_required
 def solicitacao_gerenciar(request, pk):
     solicitacao = get_object_or_404(SolicitacaoMotorista, pk=pk)
     motoresas_disponiveis = get_motoristas_disponiveis(
@@ -57,6 +61,7 @@ def solicitacao_gerenciar(request, pk):
     })
 
 
+@login_required
 @transaction.atomic
 def solicitacao_create(request):
     if request.method == 'POST':

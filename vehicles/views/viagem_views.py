@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db import transaction
+from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta
 import random
 from ..models import SolicitacaoViagem, SolicitacaoMotorista
@@ -12,6 +13,7 @@ from .utils import (
 )
 
 
+@login_required
 def solicitacao_viagem_list(request):
     data_inicio_pesquisa = request.GET.get('data_inicio')
     data_fim_pesquisa = request.GET.get('data_fim')
@@ -44,11 +46,13 @@ def solicitacao_viagem_list(request):
     })
 
 
+@login_required
 def solicitacao_viagem_detail(request, pk):
     solicitacao = get_object_or_404(SolicitacaoViagem, pk=pk)
     return render(request, 'solicitacao_viagem_detail.html', {'solicitacao': solicitacao})
 
 
+@login_required
 def solicitacao_viagem_gerenciar(request, pk):
     solicitacao = get_object_or_404(SolicitacaoViagem, pk=pk)
     veiculos_disponiveis = get_veiculos_disponiveis(
@@ -78,6 +82,7 @@ def solicitacao_viagem_gerenciar(request, pk):
     })
 
 
+@login_required
 @transaction.atomic
 def solicitacao_viagem_create(request):
     if request.method == 'POST':

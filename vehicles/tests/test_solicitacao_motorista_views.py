@@ -2,6 +2,7 @@ import pytest
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.utils import timezone
+from django.contrib.auth.models import User
 from datetime import timedelta
 from vehicles.models import Motorista, SolicitacaoMotorista
 
@@ -9,6 +10,8 @@ from vehicles.models import Motorista, SolicitacaoMotorista
 class SolicitacaoMotoristaViewTest(TestCase):
     def setUp(self):
         self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.client.login(username='testuser', password='testpass123')
         self.motorista = Motorista.objects.create(
             nome="Maria Santos",
             tipo_carteira="B"

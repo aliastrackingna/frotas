@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.utils import timezone
+from django.contrib.auth.models import User
 from datetime import timedelta
 from vehicles.models import Motorista, Veiculo, SolicitacaoMotorista, SolicitacaoViagem, RegistroPortaria
 from vehicles.tests.fixtures import criar_motorista, criar_veiculo, criar_solicitacao_motorista, criar_solicitacao_viagem
@@ -9,6 +10,8 @@ from vehicles.tests.fixtures import criar_motorista, criar_veiculo, criar_solici
 class PortariaViewTest(TestCase):
     def setUp(self):
         self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.client.login(username='testuser', password='testpass123')
         self.motorista = criar_motorista("Motorista Portaria", "D")
         self.veiculo = criar_veiculo("PORT001", "Mercedes-Benz", 44, kms_atual=1000)
         self.solicitacao_motorista = criar_solicitacao_motorista(
@@ -83,6 +86,8 @@ class PortariaViewTest(TestCase):
 class PortariaKmValidationTest(TestCase):
     def setUp(self):
         self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.client.login(username='testuser', password='testpass123')
         self.motorista = Motorista.objects.create(
             nome="Motorista KM",
             tipo_carteira="D"

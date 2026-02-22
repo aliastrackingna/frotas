@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.utils import timezone
+from django.contrib.auth.models import User
 from datetime import timedelta
 from vehicles.models import Veiculo, Motorista, SolicitacaoMotorista, SolicitacaoViagem
 
@@ -8,6 +9,8 @@ from vehicles.models import Veiculo, Motorista, SolicitacaoMotorista, Solicitaca
 class SolicitacaoViagemViewTest(TestCase):
     def setUp(self):
         self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.client.login(username='testuser', password='testpass123')
         self.motorista = Motorista.objects.create(
             nome="Maria Santos",
             tipo_carteira="D"
@@ -248,9 +251,30 @@ class SolicitacaoViagemViewTest(TestCase):
 class ViagemGerenciarViewTest(TestCase):
     def setUp(self):
         self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.client.login(username='testuser', password='testpass123')
         self.motorista = Motorista.objects.create(
             nome="Motorista Viagem",
             tipo_carteira="D"
+        )
+        self.veiculo = Veiculo.objects.create(
+            placa="VGTEST02",
+            marca="Volvo",
+            quantidade_passageiros=44
+        )
+        self.solicitacao_motorista = SolicitacaoMotorista.objects.create(
+            data_inicio=timezone.now() + timedelta(days=5),
+            data_fim_prevista=timezone.now() + timedelta(days=5, hours=4),
+            motorista=self.motorista,
+            status='Confirmada'
+        )
+        self.viagem = SolicitacaoViagem.objects.create(
+            data_viagem=timezone.now() + timedelta(days=5),
+            data_fim_prevista=timezone.now() + timedelta(days=5, hours=4),
+            quantidade_passageiros=30,
+            local_embarque="Terminal A",
+            local_desembarque="Terminal B",
+            status='Pendente'
         )
         self.veiculo = Veiculo.objects.create(
             placa="VGTEST01",

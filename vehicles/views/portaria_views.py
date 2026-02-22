@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 from datetime import timedelta
 from ..models import SolicitacaoViagem, RegistroPortaria
 
 
+@login_required
 def portaria_list(request):
     hoje = timezone.now().date()
     amanha = hoje + timedelta(days=1)
@@ -57,6 +59,7 @@ def portaria_list(request):
     })
 
 
+@login_required
 def portaria_registrar_saida(request, pk):
     viagem = get_object_or_404(SolicitacaoViagem, pk=pk)
     
@@ -78,6 +81,7 @@ def portaria_registrar_saida(request, pk):
     })
 
 
+@login_required
 def portaria_registrar_chegada(request, pk):
     viagem = get_object_or_404(SolicitacaoViagem, pk=pk)
     registro = get_object_or_404(RegistroPortaria, viagem=viagem)

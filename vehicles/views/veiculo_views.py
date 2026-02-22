@@ -1,13 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db import models
+from django.contrib.auth.decorators import login_required
 from ..models import Veiculo
 
 
+@login_required
 def index(request):
     total_veiculos = Veiculo.objects.count()
     return render(request, 'index.html', {'total_veiculos': total_veiculos})
 
 
+@login_required
 def veiculo_list(request):
     veiculos = Veiculo.objects.all()
     busca = request.GET.get('busca', '')
@@ -23,11 +26,13 @@ def veiculo_list(request):
     })
 
 
+@login_required
 def veiculo_detail(request, pk):
     veiculo = get_object_or_404(Veiculo, pk=pk)
     return render(request, 'vehicles/veiculo_detail.html', {'veiculo': veiculo})
 
 
+@login_required
 def veiculo_create(request):
     if request.method == 'POST':
         Veiculo.objects.create(
@@ -41,6 +46,7 @@ def veiculo_create(request):
     return render(request, 'vehicles/veiculo_form.html')
 
 
+@login_required
 def veiculo_update(request, pk):
     veiculo = get_object_or_404(Veiculo, pk=pk)
     if request.method == 'POST':
@@ -54,6 +60,7 @@ def veiculo_update(request, pk):
     return render(request, 'vehicles/veiculo_form.html', {'veiculo': veiculo})
 
 
+@login_required
 def veiculo_delete(request, pk):
     veiculo = get_object_or_404(Veiculo, pk=pk)
     if request.method == 'POST':
@@ -62,6 +69,7 @@ def veiculo_delete(request, pk):
     return render(request, 'vehicles/veiculo_confirm_delete.html', {'veiculo': veiculo})
 
 
+@login_required
 def observacao_create(request, veiculo_pk):
     veiculo = get_object_or_404(Veiculo, pk=veiculo_pk)
     if request.method == 'POST':

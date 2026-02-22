@@ -1,11 +1,14 @@
 from django.test import TestCase, Client
 from django.urls import reverse
+from django.contrib.auth.models import User
 from vehicles.models import Veiculo, Observacao
 
 
 class ObservacaoViewTest(TestCase):
     def setUp(self):
         self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.client.login(username='testuser', password='testpass123')
         self.veiculo = Veiculo.objects.create(
             placa='OBS1234',
             marca='Honda',
