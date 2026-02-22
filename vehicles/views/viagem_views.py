@@ -32,7 +32,7 @@ def solicitacao_viagem_list(request):
 
     # Executa a query com os filtros combinados (lógica AND)
     # Graças à Lazy Evaluation do Django, isso gera apenas um SELECT no banco
-    solicitacoes = SolicitacaoViagem.objects.filter(**filtros)
+    solicitacoes = SolicitacaoViagem.objects.filter(**filtros).select_related('veiculo', 'solicitacao_motorista')
     
     today = datetime.now().strftime('%Y-%m-%d')
     tomorrow = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
@@ -48,13 +48,19 @@ def solicitacao_viagem_list(request):
 
 @login_required
 def solicitacao_viagem_detail(request, pk):
-    solicitacao = get_object_or_404(SolicitacaoViagem, pk=pk)
+    solicitacao = get_object_or_404(
+        SolicitacaoViagem.objects.select_related('veiculo', 'solicitacao_motorista__motorista'),
+        pk=pk
+    )
     return render(request, 'solicitacao_viagem_detail.html', {'solicitacao': solicitacao})
 
 
 @login_required
 def solicitacao_viagem_gerenciar(request, pk):
-    solicitacao = get_object_or_404(SolicitacaoViagem, pk=pk)
+    solicitacao = get_object_or_404(
+        SolicitacaoViagem.objects.select_related('veiculo', 'solicitacao_motorista'),
+        pk=pk
+    )
     veiculos_disponiveis = get_veiculos_disponiveis(
         solicitacao.data_viagem, 
         solicitacao.data_fim_prevista,
@@ -73,7 +79,7 @@ def solicitacao_viagem_gerenciar(request, pk):
         data_inicio__lte=solicitacao.data_fim_prevista,
         data_fim_prevista__gte=solicitacao.data_viagem,
         status__in=['Pendente', 'Confirmada']
-    )
+    ).select_related('motorista')
     
     return render(request, 'solicitacao_viagem_gerenciar.html', {
         'solicitacao': solicitacao,

@@ -20,7 +20,7 @@ def solicitacao_list(request):
     if data_fim_pesquisa:
         filtros['data_inicio__date__lte'] = data_fim_pesquisa
 
-    solicitacoes = SolicitacaoMotorista.objects.filter(**filtros)
+    solicitacoes = SolicitacaoMotorista.objects.filter(**filtros).select_related('motorista')
     
     today = datetime.now().strftime('%Y-%m-%d')
     tomorrow = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
@@ -36,7 +36,7 @@ def solicitacao_list(request):
 
 @login_required
 def solicitacao_detail(request, pk):
-    solicitacao = get_object_or_404(SolicitacaoMotorista, pk=pk)
+    solicitacao = get_object_or_404(SolicitacaoMotorista.objects.select_related('motorista'), pk=pk)
     return render(request, 'solicitacao_detail.html', {'solicitacao': solicitacao})
 
 

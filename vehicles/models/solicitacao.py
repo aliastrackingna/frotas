@@ -11,8 +11,8 @@ class SolicitacaoMotorista(models.Model):
         ('Cancelada', 'Cancelada'),
     ]
 
-    data_inicio = models.DateTimeField()
-    data_fim_prevista = models.DateTimeField()
+    data_inicio = models.DateTimeField(db_index=True)
+    data_fim_prevista = models.DateTimeField(db_index=True)
     motorista = models.ForeignKey(
         Motorista,
         on_delete=models.SET_NULL,
@@ -20,7 +20,7 @@ class SolicitacaoMotorista(models.Model):
         null=True,
         blank=True
     )
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pendente')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pendente', db_index=True)
     observacao = models.TextField(blank=True, default='')
     data_criacao = models.DateTimeField(auto_now_add=True)
 
@@ -39,8 +39,8 @@ class SolicitacaoViagem(models.Model):
         ('Cancelada', 'Cancelada'),
     ]
 
-    data_viagem = models.DateTimeField()
-    data_fim_prevista = models.DateTimeField()
+    data_viagem = models.DateTimeField(db_index=True)
+    data_fim_prevista = models.DateTimeField(db_index=True)
     quantidade_passageiros = models.PositiveIntegerField()
     local_embarque = models.CharField(max_length=200)
     local_desembarque = models.CharField(max_length=200)
@@ -59,7 +59,7 @@ class SolicitacaoViagem(models.Model):
         null=True,
         blank=True
     )
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pendente')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pendente', db_index=True)
     observacao = models.TextField(blank=True, default='')
     data_criacao = models.DateTimeField(auto_now_add=True)
 

@@ -28,7 +28,7 @@ def veiculo_list(request):
 
 @login_required
 def veiculo_detail(request, pk):
-    veiculo = get_object_or_404(Veiculo, pk=pk)
+    veiculo = get_object_or_404(Veiculo.objects.prefetch_related('observacoes'), pk=pk)
     return render(request, 'vehicles/veiculo_detail.html', {'veiculo': veiculo})
 
 
