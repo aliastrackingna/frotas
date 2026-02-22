@@ -153,9 +153,9 @@ def solicitacao_viagem_create(request):
                         'success': False
                     })
                 
-                motoresas_disp = get_motoristas_disponiveis(data_viagem, data_fim)
-                if motoresas_disp.exists():
-                    primeiro_motorista = random.choice(list(motoresas_disp))
+                motoristas_disp = get_motoristas_disponiveis(data_viagem, data_fim)
+                if motoristas_disp.exists():
+                    primeiro_motorista = random.choice(list(motoristas_disp))
                     solicitacao_motorista = SolicitacaoMotorista.objects.create(
                         data_inicio=data_viagem,
                         data_fim_prevista=data_fim,

@@ -60,7 +60,7 @@ def _atualizar_status_solicitacao(solicitacao):
             solicitacao.save()
 
 
-def processar_action_gerenciar(solicitacao, action, veiculo_id=None, solicitacao_motorista_id=None, motoristal_id=None):
+def processar_action_gerenciar(solicitacao, action, veiculo_id=None, solicitacao_motorista_id=None, motorista_id=None):
     actions = {
         'cancelar': lambda s: setattr(s, 'status', 'Cancelada'),
         'confirmar': lambda s: setattr(s, 'status', 'Confirmada'),
@@ -79,8 +79,8 @@ def processar_action_gerenciar(solicitacao, action, veiculo_id=None, solicitacao
         else:
             return False
     elif isinstance(solicitacao, SolicitacaoMotorista):
-        if action == 'atribuir_motorista' and motoristal_id:
-            solicitacao.motorista_id = motoristal_id
+        if action == 'atribuir_motorista' and motorista_id:
+            solicitacao.motorista_id = motorista_id
             _atualizar_status_solicitacao(solicitacao)
         elif action in actions:
             actions[action](solicitacao)

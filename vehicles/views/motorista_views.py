@@ -10,12 +10,12 @@ def motorista_list(request):
 
 @login_required
 def motorista_detail(request, pk):
-    motoristal = get_object_or_404(Motorista, pk=pk)
-    return render(request, 'motorista_detail.html', {'motorista': motoristal})
+    motorista = get_object_or_404(Motorista, pk=pk)
+    return render(request, 'motorista_detail.html', {'motorista': motorista})
 
 
 @login_required
-def motoristal_create(request):
+def motorista_create(request):
     if request.method == 'POST':
         Motorista.objects.create(
             nome=request.POST['nome'],
@@ -26,20 +26,20 @@ def motoristal_create(request):
 
 
 @login_required
-def motoristal_update(request, pk):
-    motoristal = get_object_or_404(Motorista, pk=pk)
+def motorista_update(request, pk):
+    motorista = get_object_or_404(Motorista, pk=pk)
     if request.method == 'POST':
-        motoristal.nome = request.POST['nome']
-        motoristal.tipo_carteira = request.POST['tipo_carteira']
-        motoristal.save()
+        motorista.nome = request.POST['nome']
+        motorista.tipo_carteira = request.POST['tipo_carteira']
+        motorista.save()
         return redirect('motorista_list')
-    return render(request, 'motorista_form.html', {'motorista': motoristal})
+    return render(request, 'motorista_form.html', {'motorista': motorista})
 
 
 @login_required
-def motoristal_delete(request, pk):
-    motoristal = get_object_or_404(Motorista, pk=pk)
+def motorista_delete(request, pk):
+    motorista = get_object_or_404(Motorista, pk=pk)
     if request.method == 'POST':
-        motoristal.delete()
+        motorista.delete()
         return redirect('motorista_list')
-    return render(request, 'motorista_confirm_delete.html', {'motorista': motoristal})
+    return render(request, 'motorista_confirm_delete.html', {'motorista': motorista})

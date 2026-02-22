@@ -4,8 +4,8 @@ from .veiculo_views import (
 )
 from .motorista_views import (
     motorista_list, motorista_detail,
-    motoristal_create,
-    motoristal_update, motoristal_delete
+    motorista_create,
+    motorista_update, motorista_delete
 )
 from .solicitacao_views import (
     solicitacao_list, solicitacao_detail, solicitacao_create,

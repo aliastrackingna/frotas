@@ -43,21 +43,21 @@ def solicitacao_detail(request, pk):
 @login_required
 def solicitacao_gerenciar(request, pk):
     solicitacao = get_object_or_404(SolicitacaoMotorista, pk=pk)
-    motoresas_disponiveis = get_motoristas_disponiveis(
+    motoristas_disponiveis = get_motoristas_disponiveis(
         solicitacao.data_inicio, solicitacao.data_fim_prevista
     )
     
     if request.method == 'POST':
         action = request.POST.get('action')
         veiculo_id = None
-        motoristal_id = request.POST.get('motorista')
+        motorista_id = request.POST.get('motorista')
         
-        if _processar_action_gerenciar(solicitacao, action, veiculo_id=veiculo_id, motoristal_id=motoristal_id):
+        if _processar_action_gerenciar(solicitacao, action, veiculo_id=veiculo_id, motorista_id=motorista_id):
             return redirect('solicitacao_detail', pk=pk)
     
     return render(request, 'solicitacao_gerenciar.html', {
         'solicitacao': solicitacao,
-        'motoristas': list(motoresas_disponiveis)
+        'motoristas': list(motoristas_disponiveis)
     })
 
 

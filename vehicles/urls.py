@@ -4,10 +4,10 @@ from vehicles import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('motoristas/', views.motorista_list, name='motorista_list'),
-    path('motoristas/novo/', views.motoristal_create, name='motorista_create'),
+    path('motoristas/novo/', views.motorista_create, name='motorista_create'),
     path('motoristas/<int:pk>/', views.motorista_detail, name='motorista_detail'),
-    path('motoristas/<int:pk>/editar/', views.motoristal_update, name='motorista_update'),
-    path('motoristas/<int:pk>/excluir/', views.motoristal_delete, name='motorista_delete'),
+    path('motoristas/<int:pk>/editar/', views.motorista_update, name='motorista_update'),
+    path('motoristas/<int:pk>/excluir/', views.motorista_delete, name='motorista_delete'),
     path('solicitacoes/', views.solicitacao_list, name='solicitacao_list'),
     path('solicitacoes/nova/', views.solicitacao_create, name='solicitacao_create'),
     path('solicitacoes/<int:pk>/', views.solicitacao_detail, name='solicitacao_detail'),
