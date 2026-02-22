@@ -19,13 +19,31 @@
         {% csrf_token %}
         
         <div class="form-group">
-            <label for="data_inicio">Data e Hora de Início</label>
-            <input type="datetime-local" id="data_inicio" name="data_inicio" required>
+            <label>Data e Hora de Início</label>
+            <div class="form-row">
+                <div class="form-group" style="flex: 1;">
+                    <input type="text" id="data_inicio_data" name="data_inicio_data" class="flatpickr-date" required placeholder="Data">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <select id="data_inicio_hora" name="data_inicio_hora" required>
+                        {% include 'utils/options_util.html' %}
+                    </select>
+                </div>
+            </div>
         </div>
         
         <div class="form-group">
-            <label for="data_fim_prevista">Data e Hora Prevista de Retorno</label>
-            <input type="datetime-local" id="data_fim_prevista" name="data_fim_prevista" required>
+            <label>Data e Hora Prevista de Retorno</label>
+            <div class="form-row">
+                <div class="form-group" style="flex: 1;">
+                    <input type="text" id="data_fim_prevista_data" name="data_fim_prevista_data" class="flatpickr-date" required placeholder="Data">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <select id="data_fim_prevista_hora" name="data_fim_prevista_hora" required>
+                        {% include 'utils/options_util.html' %}
+                    </select>
+                </div>
+            </div>
         </div>
         
         <div class="form-group">
@@ -39,4 +57,15 @@
         </div>
     </form>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr(".flatpickr-date", {
+            dateFormat: "Y-m-d",
+            altFormat: "d/m/Y",
+            minDate: "today",
+            locale: "pt"
+        });
+    });
+</script>
 {% endblock %}

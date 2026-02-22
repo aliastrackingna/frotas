@@ -37,8 +37,19 @@ def solicitacao_gerenciar(request, pk):
 @transaction.atomic
 def solicitacao_create(request):
     if request.method == 'POST':
-        data_inicio_str = request.POST.get('data_inicio')
-        data_fim_str = request.POST.get('data_fim_prevista')
+        data_inicio_data = request.POST.get('data_inicio_data')
+        data_inicio_hora = request.POST.get('data_inicio_hora')
+        data_fim_data = request.POST.get('data_fim_prevista_data')
+        data_fim_hora = request.POST.get('data_fim_prevista_hora')
+        
+        if not data_inicio_data or not data_inicio_hora:
+            return render(request, 'solicitacao_form.html', {'error': 'Data e hora de início são obrigatórios.'})
+        
+        if not data_fim_data or not data_fim_hora:
+            return render(request, 'solicitacao_form.html', {'error': 'Data e hora de retorno são obrigatórios.'})
+        
+        data_inicio_str = f"{data_inicio_data} {data_inicio_hora}"
+        data_fim_str = f"{data_fim_data} {data_fim_hora}"
         
         data_inicio, error = _parse_datetime(data_inicio_str)
         if error:

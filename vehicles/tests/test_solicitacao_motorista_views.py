@@ -44,12 +44,14 @@ class SolicitacaoMotoristaViewTest(TestCase):
 
     def test_criar_solicitacao_com_motorista_disponivel(self):
         agora = timezone.now()
-        data_inicio = (agora + timedelta(days=1)).strftime('%Y-%m-%dT%H:%M')
-        data_fim = (agora + timedelta(days=1, hours=4)).strftime('%Y-%m-%dT%H:%M')
+        data_inicio = agora + timedelta(days=1)
+        data_fim = agora + timedelta(days=1, hours=4)
         
         response = self.client.post(reverse('solicitacao_create'), {
-            'data_inicio': data_inicio,
-            'data_fim_prevista': data_fim,
+            'data_inicio_data': data_inicio.strftime('%Y-%m-%d'),
+            'data_inicio_hora': data_inicio.strftime('%H:%M'),
+            'data_fim_prevista_data': data_fim.strftime('%Y-%m-%d'),
+            'data_fim_prevista_hora': data_fim.strftime('%H:%M'),
             'observacao': 'Teste de solicitação'
         })
         
@@ -130,8 +132,10 @@ class SolicitacaoMotoristaViewTest(TestCase):
         tarde_fim = timezone.make_aware(datetime.combine(dia_futuro, datetime.min.time().replace(hour=18)))
         
         response1 = self.client.post(reverse('solicitacao_create'), {
-            'data_inicio': manha_inicio.strftime('%Y-%m-%dT%H:%M'),
-            'data_fim_prevista': manha_fim.strftime('%Y-%m-%dT%H:%M'),
+            'data_inicio_data': manha_inicio.strftime('%Y-%m-%d'),
+            'data_inicio_hora': manha_inicio.strftime('%H:%M'),
+            'data_fim_prevista_data': manha_fim.strftime('%Y-%m-%d'),
+            'data_fim_prevista_hora': manha_fim.strftime('%H:%M'),
             'observacao': 'Viagem de manhã'
         })
         self.assertEqual(response1.status_code, 302)
@@ -140,8 +144,10 @@ class SolicitacaoMotoristaViewTest(TestCase):
         self.assertEqual(solicitacao_manha.status, 'Confirmada')
         
         response2 = self.client.post(reverse('solicitacao_create'), {
-            'data_inicio': tarde_inicio.strftime('%Y-%m-%dT%H:%M'),
-            'data_fim_prevista': tarde_fim.strftime('%Y-%m-%dT%H:%M'),
+            'data_inicio_data': tarde_inicio.strftime('%Y-%m-%d'),
+            'data_inicio_hora': tarde_inicio.strftime('%H:%M'),
+            'data_fim_prevista_data': tarde_fim.strftime('%Y-%m-%d'),
+            'data_fim_prevista_hora': tarde_fim.strftime('%H:%M'),
             'observacao': 'Viagem de tarde'
         })
         self.assertEqual(response2.status_code, 302)

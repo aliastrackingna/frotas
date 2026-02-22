@@ -61,12 +61,14 @@ class SolicitacaoViagemViewTest(TestCase):
 
     def test_criar_viagem_com_veiculo_e_motorista_disponiveis(self):
         agora = timezone.now()
-        data_viagem = (agora + timedelta(days=100)).strftime('%Y-%m-%dT%H:%M')
-        data_fim = (agora + timedelta(days=100, hours=4)).strftime('%Y-%m-%dT%H:%M')
+        data_viagem = (agora + timedelta(days=100))
+        data_fim = (agora + timedelta(days=100, hours=4))
         
         response = self.client.post(reverse('solicitacao_viagem_create'), {
-            'data_viagem': data_viagem,
-            'data_fim_prevista': data_fim,
+            'data_viagem_data': data_viagem.strftime('%Y-%m-%d'),
+            'data_viagem_hora': data_viagem.strftime('%H:%M'),
+            'data_fim_prevista_data': data_fim.strftime('%Y-%m-%d'),
+            'data_fim_prevista_hora': data_fim.strftime('%H:%M'),
             'quantidade_passageiros': '15',
             'local_embarque': 'Escola A',
             'local_desembarque': 'Escola B',
@@ -78,12 +80,14 @@ class SolicitacaoViagemViewTest(TestCase):
 
     def test_criar_viagem_capacidade_proxima_pendente(self):
         agora = timezone.now()
-        data_viagem = (agora + timedelta(days=100)).strftime('%Y-%m-%dT%H:%M')
-        data_fim = (agora + timedelta(days=100, hours=4)).strftime('%Y-%m-%dT%H:%M')
+        data_viagem = (agora + timedelta(days=100))
+        data_fim = (agora + timedelta(days=100, hours=4))
         
         response = self.client.post(reverse('solicitacao_viagem_create'), {
-            'data_viagem': data_viagem,
-            'data_fim_prevista': data_fim,
+            'data_viagem_data': data_viagem.strftime('%Y-%m-%d'),
+            'data_viagem_hora': data_viagem.strftime('%H:%M'),
+            'data_fim_prevista_data': data_fim.strftime('%Y-%m-%d'),
+            'data_fim_prevista_hora': data_fim.strftime('%H:%M'),
             'quantidade_passageiros': '25',
             'local_embarque': 'A',
             'local_desembarque': 'B',
@@ -94,12 +98,14 @@ class SolicitacaoViagemViewTest(TestCase):
 
     def test_criar_viagem_itinerario(self):
         agora = timezone.now()
-        data_viagem = (agora + timedelta(days=100)).strftime('%Y-%m-%dT%H:%M')
-        data_fim = (agora + timedelta(days=100, hours=4)).strftime('%Y-%m-%dT%H:%M')
+        data_viagem = (agora + timedelta(days=100))
+        data_fim = (agora + timedelta(days=100, hours=4))
         
         response = self.client.post(reverse('solicitacao_viagem_create'), {
-            'data_viagem': data_viagem,
-            'data_fim_prevista': data_fim,
+            'data_viagem_data': data_viagem.strftime('%Y-%m-%d'),
+            'data_viagem_hora': data_viagem.strftime('%H:%M'),
+            'data_fim_prevista_data': data_fim.strftime('%Y-%m-%d'),
+            'data_fim_prevista_hora': data_fim.strftime('%H:%M'),
             'quantidade_passageiros': '20',
             'local_embarque': 'Escola Central',
             'local_desembarque': 'Centro',
@@ -113,8 +119,10 @@ class SolicitacaoViagemViewTest(TestCase):
 
     def test_criar_viagem_formato_data_invalido(self):
         response = self.client.post(reverse('solicitacao_viagem_create'), {
-            'data_viagem': 'data-invalida',
-            'data_fim_prevista': 'outra-data-invalida',
+            'data_viagem_data': 'data-invalida',
+            'data_viagem_hora': '10:00',
+            'data_fim_prevista_data': 'outra-data-invalida',
+            'data_fim_prevista_hora': '14:00',
             'quantidade_passageiros': '30',
             'local_embarque': 'A',
             'local_desembarque': 'B',

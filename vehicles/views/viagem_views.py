@@ -5,6 +5,7 @@ import random
 from ..models import SolicitacaoViagem, SolicitacaoMotorista
 from .utils import (
     get_veiculos_disponiveis, 
+    get_motoristas_disponiveis,
     _parse_datetime, 
     _validar_datas, 
     _processar_action_gerenciar
@@ -80,8 +81,19 @@ def solicitacao_viagem_gerenciar(request, pk):
 @transaction.atomic
 def solicitacao_viagem_create(request):
     if request.method == 'POST':
-        data_viagem_str = request.POST.get('data_viagem')
-        data_fim_str = request.POST.get('data_fim_prevista')
+        data_viagem_data = request.POST.get('data_viagem_data')
+        data_viagem_hora = request.POST.get('data_viagem_hora')
+        data_fim_data = request.POST.get('data_fim_prevista_data')
+        data_fim_hora = request.POST.get('data_fim_prevista_hora')
+        
+        if not data_viagem_data or not data_viagem_hora:
+            return render(request, 'solicitacao_viagem_form.html', {'error': 'Data e hora da viagem são obrigatórios.'})
+        
+        if not data_fim_data or not data_fim_hora:
+            return render(request, 'solicitacao_viagem_form.html', {'error': 'Data e hora de retorno são obrigatórios.'})
+        
+        data_viagem_str = f"{data_viagem_data} {data_viagem_hora}"
+        data_fim_str = f"{data_fim_data} {data_fim_hora}"
         
         data_viagem, error = _parse_datetime(data_viagem_str)
         if error:
@@ -118,19 +130,37 @@ def solicitacao_viagem_create(request):
                 solicitacao.veiculo = lista_veiculos[0]
 
                 capacidade = solicitacao.veiculo.quantidade_passageiros
+                lugares_vazios = capacidade - quantidade_passageiros
                 
                 if quantidade_passageiros >= 23:
-                    solicitacao.status = 'Confirmada'
                     solicitacao.observacao = 'Alocado automaticamente para veículo de grande porte.'
+                elif lugares_vazios > 4: 
+                    solicitacao.status = 'Pendente'
+                    solicitacao.observacao = f'Alerta de ociosidade: Solicitado para {quantidade_passageiros}, mas o menor veículo disponível tem {capacidade} lugares. Requer autorização do coordenador.'
+                    return render(request, 'solicitacao_viagem_form.html', {
+                        'error': f' {solicitacao.observacao} A solicitação ficou pendente.',
+                        'success': False
+                    })
                 
+                motoresas_disp = get_motoristas_disponiveis(data_viagem, data_fim)
+                if motoresas_disp.exists():
+                    primeiro_motorista = random.choice(list(motoresas_disp))
+                    solicitacao_motorista = SolicitacaoMotorista.objects.create(
+                        data_inicio=data_viagem,
+                        data_fim_prevista=data_fim,
+                        motorista=primeiro_motorista,
+                        status='Confirmada'
+                    )
+                    solicitacao.solicitacao_motorista = solicitacao_motorista
+                        
+                    solicitacao.status = 'Confirmada'
                 else:
-                    lugares_vazios = capacidade - quantidade_passageiros
-                    if lugares_vazios > 4: 
-                        solicitacao.status = 'Pendente'
-                        solicitacao.observacao = f'Alerta de ociosidade: Solicitado para {quantidade_passageiros}, mas o menor veículo disponível tem {capacidade} lugares. Requer autorização do coordenador.'
-                    else:
-                        solicitacao.status = 'Confirmada'
-                        solicitacao.observacao = 'Veículo alocado com eficiência.'
+                    solicitacao.status = 'Pendente'
+                    return render(request, 'solicitacao_viagem_form.html', {
+                        'error': 'A solicitação ficou pendente.\nNenhum motorista disponível',
+                        'success': False
+                    })
+                
                 solicitacao.save()
                 return redirect('solicitacao_viagem_detail', pk=solicitacao.pk)
             else:

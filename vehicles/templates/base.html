@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Frotas{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
 </head>
 <body>
     <nav class="menu">
@@ -47,5 +50,36 @@
     <div class="content">
         {% block content %}{% endblock %}
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            flatpickr(".datetimepicker", {
+                enableTime: true,
+                dateFormat: "Y-m-dTH:i",
+                altFormat: "d-m-Y H:i",
+                minDate: "today",
+                locale: "pt",
+                time_24hr: true,
+                allowInput: false,
+                // 1. Pula os minutos de 30 em 30 (00 e 30)
+                minuteIncrement: 30,
+
+                // 2. Evento para fechar o calendário assim que a data e a hora forem selecionadas
+                onChange: function (selectedDates, dateStr, instance) {
+                    // Verifica se o usuário já selecionou a data E a hora
+                    // O Flatpickr aciona o onChange duas vezes (uma na data, outra na hora)
+                    if (selectedDates.length > 0 && instance.selectedDateObj) {
+                        // Pequeno delay para o usuário ver o que clicou antes de fechar
+                        setTimeout(function () {
+                            instance.close();
+                        }, 100);
+                    }
+                }
+            });
+        });
+
+    </script>
 </body>
+
+
 </html>

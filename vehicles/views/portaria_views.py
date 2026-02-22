@@ -11,6 +11,8 @@ def portaria_list(request):
     todas_viagens = SolicitacaoViagem.objects.filter(
         data_viagem__date__gte=hoje,
         data_viagem__date__lt=amanha
+    ).exclude(
+        status='Cancelada'
     ).order_by('data_viagem')
     
     concluidas = []

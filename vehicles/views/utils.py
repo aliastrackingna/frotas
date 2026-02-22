@@ -33,11 +33,16 @@ def get_veiculos_disponiveis(data_inicio, data_fim, quantidade_passageiros):
 
 
 def _parse_datetime(date_str):
-    try:
-        dt = datetime.strptime(date_str, '%Y-%m-%dT%H:%M')
-        return timezone.make_aware(dt), None
-    except (ValueError, TypeError):
+    if not date_str:
         return None, 'Datas inválidas. Use o formato correto.'
+    formats = ['%Y-%m-%d %H:%M', '%Y-%m-%dT%H:%M']
+    for fmt in formats:
+        try:
+            dt = datetime.strptime(date_str, fmt)
+            return timezone.make_aware(dt), None
+        except (ValueError, TypeError):
+            continue
+    return None, 'Datas inválidas. Use o formato correto.'
 
 
 def _validar_datas(data_inicio, data_fim):
