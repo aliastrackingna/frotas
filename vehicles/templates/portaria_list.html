@@ -60,7 +60,7 @@
             <div class="trip-body">
                 <div class="trip-info">
                     <span class="info-icon">👤</span>
-                    <span>{% if viagem.motorista %}{{ viagem.motorista.nome }} (CNH {{ viagem.motorista.tipo_carteira }}){% else %}Sem motorista{% endif %}</span>
+                    <span>{% if viagem.solicitacao_motorista.motorista %}{{ viagem.solicitacao_motorista.motorista.nome }} (CNH {{ viagem.solicitacao_motorista.motorista.tipo_carteira }}){% else %}Sem motorista{% endif %}</span>
                 </div>
                 <div class="trip-info">
                     <span class="info-icon">📍</span>
@@ -141,7 +141,7 @@
             <div class="trip-body">
                 <div class="trip-info">
                     <span class="info-icon">👤</span>
-                    <span>{% if viagem.motorista %}{{ viagem.motorista.nome }}{% else %}--{% endif %}</span>
+                    <span>{% if viagem.solicitacao_motorista.motorista %}{{ viagem.solicitacao_motorista.motorista.nome }}{% else %}--{% endif %}</span>
                 </div>
                 <div class="trip-info">
                     <span class="info-icon">📍</span>
