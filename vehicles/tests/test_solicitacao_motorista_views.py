@@ -60,6 +60,78 @@ class SolicitacaoMotoristaViewTest(TestCase):
         self.assertEqual(solicitacao.status, 'Confirmada')
         self.assertEqual(solicitacao.motorista, self.motorista)
 
+    def test_criar_solicitacao_data_obrigatoria(self):
+        agora = timezone.now()
+        data_fim = agora + timedelta(days=1, hours=4)
+        
+        response = self.client.post(reverse('solicitacao_create'), {
+            'data_inicio_data': '',
+            'data_inicio_hora': '10:00',
+            'data_fim_prevista_data': data_fim.strftime('%Y-%m-%d'),
+            'data_fim_prevista_hora': data_fim.strftime('%H:%M'),
+            'observacao': 'Teste'
+        })
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'obrigatórios')
+
+    def test_criar_solicitacao_hora_obrigatoria(self):
+        agora = timezone.now()
+        data_inicio = agora + timedelta(days=1)
+        data_fim = agora + timedelta(days=1, hours=4)
+        
+        response = self.client.post(reverse('solicitacao_create'), {
+            'data_inicio_data': data_inicio.strftime('%Y-%m-%d'),
+            'data_inicio_hora': '',
+            'data_fim_prevista_data': data_fim.strftime('%Y-%m-%d'),
+            'data_fim_prevista_hora': data_fim.strftime('%H:%M'),
+            'observacao': 'Teste'
+        })
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'obrigatórios')
+
+    def test_criar_solicitacao_data_invalida(self):
+        response = self.client.post(reverse('solicitacao_create'), {
+            'data_inicio_data': 'data-invalida',
+            'data_inicio_hora': '10:00',
+            'data_fim_prevista_data': '2026-12-31',
+            'data_fim_prevista_hora': '14:00',
+            'observacao': 'Teste'
+        })
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Datas inválidas')
+
+    def test_listar_solicitacoes_com_filtro_data(self):
+        agora = timezone.now()
+        SolicitacaoMotorista.objects.create(
+            data_inicio=agora + timedelta(days=3),
+            data_fim_prevista=agora + timedelta(days=3, hours=2),
+            status='Pendente'
+        )
+        
+        data_filtro = (agora + timedelta(days=3)).strftime('%Y-%m-%d')
+        response = self.client.get(f'{reverse("solicitacao_list")}?data_inicio={data_filtro}')
+        
+        self.assertEqual(response.status_code, 200)
+
+    def test_criar_solicitacao_validacao_data_retorno_menor(self):
+        agora = timezone.now()
+        data_inicio = agora + timedelta(days=5)
+        data_fim = agora + timedelta(days=5, hours=-2)
+        
+        response = self.client.post(reverse('solicitacao_create'), {
+            'data_inicio_data': data_inicio.strftime('%Y-%m-%d'),
+            'data_inicio_hora': data_inicio.strftime('%H:%M'),
+            'data_fim_prevista_data': data_fim.strftime('%Y-%m-%d'),
+            'data_fim_prevista_hora': data_fim.strftime('%H:%M'),
+            'observacao': 'Teste'
+        })
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'posterior')
+
     @pytest.mark.skip(reason="Teste de edge case com race condition")
     def test_criar_solicitacao_sem_motorista_disponivel(self):
         pass

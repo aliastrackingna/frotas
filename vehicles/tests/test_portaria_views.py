@@ -52,6 +52,33 @@ class PortariaViewTest(TestCase):
         self.veiculo.refresh_from_db()
         self.assertEqual(self.veiculo.kms_atual, 1150)
 
+    def test_viagem_com_chegada_aparecem_concluidas(self):
+        self.viagem.data_viagem = timezone.now()
+        self.viagem.data_fim_prevista = timezone.now() + timedelta(hours=2)
+        self.viagem.save()
+        
+        RegistroPortaria.objects.create(
+            viagem=self.viagem,
+            km_saida=1000,
+            horario_saida=timezone.now(),
+            km_chegada=1150,
+            horario_chegada=timezone.now()
+        )
+        
+        response = self.client.get(reverse('portaria_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Concluídas')
+
+    def test_viagem_sem_chegada_aparecem_pendentes(self):
+        response = self.client.get(reverse('portaria_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Pendentes')
+
+    def test_pagina_registrar_saida(self):
+        response = self.client.get(reverse('portaria_registrar_saida', args=[self.viagem.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Registrar Saída')
+
 
 class PortariaKmValidationTest(TestCase):
     def setUp(self):

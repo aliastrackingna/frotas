@@ -131,6 +131,119 @@ class SolicitacaoViagemViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Datas inválidas')
 
+    def test_criar_viagem_data_obrigatoria(self):
+        response = self.client.post(reverse('solicitacao_viagem_create'), {
+            'data_viagem_data': '',
+            'data_viagem_hora': '10:00',
+            'data_fim_prevista_data': '2026-12-31',
+            'data_fim_prevista_hora': '14:00',
+            'quantidade_passageiros': '15',
+            'local_embarque': 'A',
+            'local_desembarque': 'B',
+        })
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'obrigatórios')
+
+    def test_criar_viagem_hora_obrigatoria(self):
+        response = self.client.post(reverse('solicitacao_viagem_create'), {
+            'data_viagem_data': '2026-12-31',
+            'data_viagem_hora': '',
+            'data_fim_prevista_data': '2026-12-31',
+            'data_fim_prevista_hora': '14:00',
+            'quantidade_passageiros': '15',
+            'local_embarque': 'A',
+            'local_desembarque': 'B',
+        })
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'obrigatórios')
+
+    def test_listar_viagens_com_filtro_data_inicio(self):
+        agora = timezone.now()
+        SolicitacaoViagem.objects.create(
+            data_viagem=agora + timedelta(days=5),
+            data_fim_prevista=agora + timedelta(days=5, hours=4),
+            quantidade_passageiros=20,
+            local_embarque='A',
+            local_desembarque='B',
+            status='Confirmada'
+        )
+        
+        data_filtro = (agora + timedelta(days=5)).strftime('%Y-%m-%d')
+        response = self.client.get(f'{reverse("solicitacao_viagem_list")}?data_inicio={data_filtro}')
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'A')
+
+    def test_listar_viagens_com_filtro_data_fim(self):
+        agora = timezone.now()
+        SolicitacaoViagem.objects.create(
+            data_viagem=agora + timedelta(days=10),
+            data_fim_prevista=agora + timedelta(days=10, hours=4),
+            quantidade_passageiros=20,
+            local_embarque='X',
+            local_desembarque='Y',
+            status='Confirmada'
+        )
+        
+        data_filtro = (agora + timedelta(days=10)).strftime('%Y-%m-%d')
+        response = self.client.get(f'{reverse("solicitacao_viagem_list")}?data_fim={data_filtro}')
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'X')
+
+    def test_listar_viagens_sem_filtro(self):
+        agora = timezone.now()
+        SolicitacaoViagem.objects.create(
+            data_viagem=agora + timedelta(days=7),
+            data_fim_prevista=agora + timedelta(days=7, hours=4),
+            quantidade_passageiros=10,
+            local_embarque='Teste',
+            local_desembarque='Teste2',
+            status='Pendente'
+        )
+        
+        response = self.client.get(reverse('solicitacao_viagem_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Teste')
+
+    def test_listar_viagens_com_filtro_data_inicio_e_fim(self):
+        agora = timezone.now()
+        SolicitacaoViagem.objects.create(
+            data_viagem=agora + timedelta(days=8),
+            data_fim_prevista=agora + timedelta(days=8, hours=4),
+            quantidade_passageiros=15,
+            local_embarque='Filtrado',
+            local_desembarque='Filtrado2',
+            status='Confirmada'
+        )
+        
+        data_inicio = (agora + timedelta(days=7)).strftime('%Y-%m-%d')
+        data_fim = (agora + timedelta(days=9)).strftime('%Y-%m-%d')
+        response = self.client.get(f'{reverse("solicitacao_viagem_list")}?data_inicio={data_inicio}&data_fim={data_fim}')
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Filtrado')
+
+    def test_criar_viagem_validacao_data_retorno_menor(self):
+        agora = timezone.now()
+        data_viagem = (agora + timedelta(days=10))
+        data_fim = (agora + timedelta(days=10, hours=-2))  # menor que início
+        
+        response = self.client.post(reverse('solicitacao_viagem_create'), {
+            'data_viagem_data': data_viagem.strftime('%Y-%m-%d'),
+            'data_viagem_hora': data_viagem.strftime('%H:%M'),
+            'data_fim_prevista_data': data_fim.strftime('%Y-%m-%d'),
+            'data_fim_prevista_hora': data_fim.strftime('%H:%M'),
+            'quantidade_passageiros': '15',
+            'local_embarque': 'A',
+            'local_desembarque': 'B',
+        })
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'posterior')
+
 
 class ViagemGerenciarViewTest(TestCase):
     def setUp(self):

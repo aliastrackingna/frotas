@@ -5,6 +5,10 @@
 {% block content %}
 <div class="header">
     <h1>🚚 Portaria</h1>
+    <div class="view-toggle">
+        <button type="button" class="view-btn active" data-view="cards" title="Visualização em Cards">🗂️</button>
+        <button type="button" class="view-btn" data-view="list" title="Visualização em Lista">📋</button>
+    </div>
     <span class="header-date">{{ data_atual }}</span>
 </div>
 
@@ -38,7 +42,7 @@
         <span class="badge">{{ pendentes|length }}</span>
     </h2>
     
-    <div class="trip-cards">
+    <div class="trip-cards" id="trip-cards-pendentes">
         {% for viagem, registro in pendentes %}
         <div class="trip-card trip-card-pendente">
             <div class="trip-header" style="flex-direction: column; align-items: flex-start; gap: 8px;">
@@ -126,7 +130,7 @@
         <span class="badge">{{ concluidas|length }}</span>
     </h2>
     
-    <div class="trip-cards">
+    <div class="trip-cards" id="trip-cards-concluidas">
         {% for viagem, registro in concluidas %}
         <div class="trip-card trip-card-concluido">
             <div class="trip-header" style="flex-direction: column; align-items: flex-start; gap: 8px;">
@@ -193,5 +197,35 @@
     <p>As viagens pendentes de outros dias aparecerão aqui.</p>
 </div>
 {% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const savedView = localStorage.getItem('portariaView') || 'cards';
+    applyView(savedView);
+
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const view = this.dataset.view;
+            applyView(view);
+            localStorage.setItem('portariaView', view);
+        });
+    });
+
+    function applyView(view) {
+        const pendentes = document.getElementById('trip-cards-pendentes');
+        const concluidas = document.getElementById('trip-cards-concluidas');
+        
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`.view-btn[data-view="${view}"]`).classList.add('active');
+        
+        if (pendentes) {
+            pendentes.classList.toggle('list-view', view === 'list');
+        }
+        if (concluidas) {
+            concluidas.classList.toggle('list-view', view === 'list');
+        }
+    }
+});
+</script>
 
 {% endblock %}

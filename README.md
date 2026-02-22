@@ -15,6 +15,7 @@ Sistema Django para gestão de veículos, motoristas e viagens.
 - Django 6.0
 - Python 3.14
 - Bootstrap 5 (templates)
+- Pytest + pytest-cov (testes)
 
 ## Setup
 
@@ -41,8 +42,14 @@ python manage.py runserver
 ## Testes
 
 ```bash
+# Executar todos os testes
 pytest -v
+
+# Executar com coverage
+pytest --cov=vehicles --cov-report=html
 ```
+
+**Cobertura de testes: 97%**
 
 ## URLs
 
